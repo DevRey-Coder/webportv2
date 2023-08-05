@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('voucher_records', function (Blueprint $table) {
             $table->id();
-            $table->char("url");
+            $table->foreignId("voucher_id");
+            $table->foreignId("product_id");
+            $table->bigInteger("quantity");
+            $table->bigInteger("cost");
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('voucher_records');
     }
 };
