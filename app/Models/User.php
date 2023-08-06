@@ -10,6 +10,25 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class);
+    }
+
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Product::class);
+    }
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
