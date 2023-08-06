@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->char("name");
-            $table->foreignId("brand_id");
-            $table->bigInteger("actual_price");
-            $table->bigInteger("sale_price");
-            $table->bigInteger("total_price");
-            $table->char("unit");
-            $table->bigInteger("more_information");
-            $table->foreignId("user_id");
-            $table->char("photo");
+            $table->char('name');
+            $table->foreignId('brand_id'); // Assumes the 'brands' table exists
+            $table->decimal('actual_price', 10, 2);
+            $table->decimal('sale_price', 10, 2);
+            $table->bigInteger('total_price');
+            $table->char('unit');
+            $table->text('more_information'); // Changed to 'text' data type to store longer information
+            $table->foreignId('user_id'); // Assumes the 'users' table exists
+            $table->char('photo');
             $table->timestamps();
         });
     }

@@ -17,7 +17,12 @@ class StockFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => rand(1, 6),
+            'product_id' => rand(1, 20),
+            'quantity' => fake()->numberBetween(1, 100),
+            'more' => fake()->paragraph,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }
