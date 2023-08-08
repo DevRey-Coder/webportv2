@@ -17,7 +17,12 @@ class VoucherFactory extends Factory
     public function definition(): array
     {
         return [
-            //
-        ];
+            "customer" => fake()->name(),
+            "voucher_number" => fake()->numberBetween(1000, 9999),
+            "total" => fake()->numberBetween(1000, 9999),
+            "tax" => fake()->numberBetween(100, 999),
+            "net_total" => fake()->numberBetween(1000, 9999),
+            "user_id" => fake()->numberBetween(1, 10)];
+
     }
 }

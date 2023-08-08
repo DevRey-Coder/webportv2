@@ -17,7 +17,10 @@ class VoucherRecordFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "voucher_id" => fake()->numberBetween(1000, 9999),
+            "product_id" => fake()->numberBetween(100, 999),
+            "quantity" => fake()->numberBetween(100, 999),
+            "cost" => fake()->numberBetween(1000, 9999),
         ];
     }
 }
