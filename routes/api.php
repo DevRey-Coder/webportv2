@@ -6,7 +6,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ApiAuthController;
 
 /*
 |--------------------------------------------------------------------------

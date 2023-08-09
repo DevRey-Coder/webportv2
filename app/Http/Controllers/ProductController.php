@@ -88,8 +88,8 @@ class ProductController extends Controller
 
         $product->update([
             'name' => $request->name,
-            'brand_id' => $request->brand,
-            'actual_price' => $request->autual_price,
+            'brand_id' => $request->brand_id,
+            'actual_price' => $request->actual_price,
             'sale_price' => $request->sale_price,
             'total_price' => $request->total_price,
             'unit' => $request->unit,
