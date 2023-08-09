@@ -28,4 +28,8 @@ class Product extends Model
     {
         return $this->hasOne(VoucherRecord::class);
     }
+    public function vouchers()
+    {
+        return $this->belongsToMany(Voucher::class, VoucherRecord::class);
+    }
 }
