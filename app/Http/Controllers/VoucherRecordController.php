@@ -2,65 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreVoucherRecordRequest;
-use App\Http\Requests\UpdateVoucherRecordRequest;
 use App\Models\VoucherRecord;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VoucherRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $voucherRecord = VoucherRecord::latest("id")->paginate(5)->withQueryString();
+        return response()->json($voucherRecord);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
+    {
+        $request->validate([
+            "voucher_id" => 'required',
+            "product_id"=> 'required',
+            "quantity" => "required",
+            "cost" => "required",
+        ]);
+
+        $voucherRecord = VoucherRecord::create([
+            "voucher_id" => $request->input("voucher_id"),
+            "product_id" => $request->input("product_id"),
+            "quantity" => $request->input("quantity"),
+            "cost" => $request->input("cost"),
+        ]);
+        return response()->json(['message' => 'Voucher_record created successfully', 'voucher' => $voucherRecord], 201);
+    }
+
+    public function show(string $id)
+    {
+        $voucherRecord = VoucherRecord::find($id);
+        if (is_null($voucherRecord)) {
+            return response()->json([
+                "message" => "Voucher-record not found",
+            ], 404);
+        }
+        return response()->json($voucherRecord);
+    }
+
+    public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreVoucherRecordRequest $request)
+    public function destroy(string $id)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(VoucherRecord $voucherRecord)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(VoucherRecord $voucherRecord)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateVoucherRecordRequest $request, VoucherRecord $voucherRecord)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(VoucherRecord $voucherRecord)
-    {
-        //
+        $voucherRecord = VoucherRecord::find($id);
+        if(is_null($voucherRecord)){
+            return response()->json([
+                "message" => "Voucher_record not found",
+            ],404);
+        }
+        $voucherRecord->delete();
+        return response()->json([
+            "message" => "Voucher_record is deleted",
+        ]);
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\VoucherRecordController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
@@ -18,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::prefix("v1")->group(function () {
 
@@ -33,6 +35,8 @@ Route::prefix("v1")->group(function () {
         Route::post("logout", [ApiAuthController::class, 'logout']);
         Route::post("logout-all", [ApiAuthController::class, 'logoutAll']);
         // Route::get("devices", [ApiAuthController::class, 'devices']);
+        Route::apiResource("voucher",VoucherController::class);
+        Route::apiResource("voucher-record",VoucherRecordController::class);
 
     });
 
