@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
