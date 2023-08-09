@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    
+    // 112
     /**
      * Display a listing of the resource.
      */
