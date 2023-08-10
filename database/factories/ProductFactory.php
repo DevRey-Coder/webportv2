@@ -17,7 +17,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $salePrice = fake()->randomFloat(2, 80, 800);
-        $totalPrice = $salePrice * fake()->randomDigitNotNull;
+        $totalStock = $salePrice * fake()->randomDigitNotNull;
         $unit = fake()->randomElement(['kg', 'pcs', 'box', 'set']);
         $moreInformation = fake()->paragraph;
         $photo = fake()->imageUrl;
@@ -27,7 +27,7 @@ class ProductFactory extends Factory
             'brand_id' => rand(1, 20),
             'actual_price' => fake()->randomFloat(2, 100, 1000),
             'sale_price' => $salePrice,
-            'total_price' =>  $totalPrice,
+            'total_stock' =>  $totalStock,
             'unit' => $unit,
             'more_information' => $moreInformation,
             'user_id' => rand(1, 20),
