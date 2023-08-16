@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             StockSeeder::class,
             UserSeeder::class,
+            PhotoSeeder::class
             // VoucherSeeder::class,
             // VoucherRecordSeeder::class,
         ]);

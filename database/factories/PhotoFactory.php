@@ -17,7 +17,10 @@ class PhotoFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'url' => fake()->url(),
+            'ext' => fake()->fileExtension(),
+            'user_id' => rand(1,6)
         ];
     }
 }
