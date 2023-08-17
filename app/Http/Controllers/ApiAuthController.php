@@ -61,3 +61,9 @@ class ApiAuthController extends Controller
     //     return Auth::user()->tokens;
     // }
 }
+
+
+//TOtal Stock ထည့်ရန်
+// Voucher ထုတ်တိုင်း Record Create လုပ်ရန်
+// Stock Update လုပ်တိုင်း Product Stock အပြောင်းအလဲဖြစ်ရမယ်
+// Vouncher ထွက်ပြီးတိုင်း Product Stock ပြန်နှုတ်ရန်

@@ -23,7 +23,7 @@ class StoreStockRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
+            // 'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:0',
             'more' => 'nullable|string',
         ];

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateStockRequest;
 use App\Http\Resources\StockDetailResource;
 use App\Http\Resources\StockResource;
 use App\Models\Stock;
+use App\Models\Product;
 use Dotenv\Util\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,12 +35,17 @@ class StockController extends Controller
      */
     public function store(StoreStockRequest $request)
     {
-        $stock = Stock::create([
+        $stock = new Stock([
             'user_id' => Auth::id(),
-            'product_id' => $request->product_id,
             'quantity' => $request->quantity,
             'more' => $request->more,
         ]);
+
+        $product = Product::findOrFail($request->product_id);
+        $product->stock()->save($stock);
+
+        $product->total_stock += $request->quantity;
+        $product->save();
 
         return new StockDetailResource($stock);
     }

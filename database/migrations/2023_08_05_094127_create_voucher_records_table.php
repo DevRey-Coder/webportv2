@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('voucher_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("voucher_id");
-            $table->foreignId("product_id");
-            $table->bigInteger("quantity");
-            $table->bigInteger("cost");
+            $table->foreignId('voucher_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id');
+            $table->integer('quantity');
+            $table->double('cost');
+            $table->double('price');
             $table->timestamps();
         });
     }

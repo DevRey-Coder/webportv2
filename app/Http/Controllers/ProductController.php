@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+
+    // 112
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +43,6 @@ class ProductController extends Controller
             'brand_id' => $request->brand_id,
             'actual_price' => $request->actual_price,
             'sale_price' => $request->sale_price,
-            'total_price' => $request->total_price,
             'unit' => $request->unit,
             'more_information' => $request->more_information,
             'user_id' => Auth::id(),
@@ -88,10 +89,9 @@ class ProductController extends Controller
 
         $product->update([
             'name' => $request->name,
-            'brand_id' => $request->brand,
-            'actual_price' => $request->autual_price,
+            'brand_id' => $request->brand_id,
+            'actual_price' => $request->actual_price,
             'sale_price' => $request->sale_price,
-            'total_price' => $request->total_price,
             'unit' => $request->unit,
             'more_information' => $request->more_information,
             'photo' => $request->photo

@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->char("url");
+            $table->string('url');
+            $table->string('name');
+            $table->string('ext');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
