@@ -23,7 +23,6 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("voucher-record", VoucherRecordController::class);
         Route::post("register", [ApiAuthController::class, 'register']);
         Route::apiResource("photo", PhotoController::class);
-
     });
 
     Route::post("login", [ApiAuthController::class, 'login']);
