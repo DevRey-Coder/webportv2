@@ -42,7 +42,6 @@ class PhotoController extends Controller
                     "user_id" => Auth::id(),
                     "created_at" => now(),
                     "updated_at" => now(),
-
                 ];
             }
             Photo::insert($savedPhotos);
