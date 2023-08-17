@@ -6,6 +6,8 @@ use App\Http\Controllers\VoucherRecordController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PhotoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +45,9 @@ Route::prefix("v1")->group(function () {
 
     Route::post("register", [ApiAuthController::class, 'register']);
     Route::post("login", [ApiAuthController::class, 'login']);
+    Route::get("media",[MediaController::class,'index']);
+    Route::get("media/{media}",[MediaController::class,'show']);
+
+    Route::delete('photo/{photo}',[PhotoController::class,'destroy']);
+    Route::put('photo/{photo}',[PhotoController::class,'update']);
 });

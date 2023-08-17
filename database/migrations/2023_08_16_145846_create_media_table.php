@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->char('name');
-            $table->char("url");
-            $table->char('ext');
-            $table->foreignId("user_id")->constrained()->onDelete('cascade');
-            $table->foreignId("media_id")->nullable();
+            $table->string('filename');
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('media');
     }
 };

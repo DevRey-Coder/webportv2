@@ -11,14 +11,48 @@ class ApiAuthController extends Controller
         $request->validate([
             "name" => "required|min:3",
             "email" => "required|email|unique:users",
-            "password" => "required|min:8|confirmed"
+            "password" => "required|min:8|confirmed",
+            "role" => "in:admin,staff",
+            "phone_number" => "nullable|string",
+            "gender" => "required|in:male,female",
+            "date_of_birth" => "required|date",
+            "address" => "required|string"
         ]);
 
         $user = User::create([
             "name" => $request->name,
             "email" => $request->email,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "role" => $request->role,
+            "phone_number" => $request->phone_number,
+            "gender" => $request->gender,
+            "date_of_birth" => $request->date_of_birth,
+            "address" => $request->address,
         ]);
+
+        if($request->hasFile('user_photo')){
+            $file = $request->file('photo');
+            $fileName = time().".".$file->getClientOriginalExtension();
+
+            $file->storeAs('public/photos/',$fileName);
+            $user = Auth::user();
+
+            $media = Media::create([
+                'filename' => $user->name."_profile",
+                'url' => Storage::url('public/photos/', $fileName)
+            ]);
+
+            $photo = Photo::create([
+                'name' => $user->name."_profile",
+                'url' => $media->url,
+                'ext' => $file->getClientOriginalExtension(),
+                'user_id' => $request->user_id
+            ]);
+
+            $media->photo()->save($photo);
+
+            $user->update(['user_photo'=>$photo->url]);
+        }
 
         return response()->json([
             "message" => "User register successful",
@@ -39,6 +73,29 @@ class ApiAuthController extends Controller
 
         return Auth::user()->createToken('admin-token',['admin']);
 
+    }
+
+    public function changePassword(Request $request){
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed'
+        ]);
+
+        $user = Auth::user();
+
+        if(!Hash::check($request->current_password, $user->password)){
+            return response()->json([
+                'message' => 'Current password is incorrect'
+            ],400);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json([
+            'message' => 'Password changed successfully'
+        ]);
     }
 
     public function logout(){
