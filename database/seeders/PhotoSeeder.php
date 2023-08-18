@@ -20,6 +20,7 @@ class PhotoSeeder extends Seeder
             "ext" => config('info.ext'),
             "user_id" => 1
         ]);
+        
         $files = Storage::allFiles('public/photo');
         Storage::delete($files);
     }
