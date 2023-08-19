@@ -10,7 +10,7 @@ use App\Models\Product;
 use Dotenv\Util\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+//clean
 class ProductController extends Controller
 {
 
