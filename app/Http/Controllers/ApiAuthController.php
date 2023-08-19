@@ -9,14 +9,22 @@ use Illuminate\Support\Facades\Hash;
 
 class ApiAuthController extends Controller
 {
-    public function register(Request $request){
+    public function register(Request $request, User $user)
+    {
+       
+        if (Auth::user()->role == "staff") {
+            return response()->json([
+                "message" => "You can't register as a staff",
+            ]);
+        }
+
         $request->validate([
             "name" => "required|min:3",
             "email" => "required|email|unique:users",
             "password" => "required|min:8",
             "address" => "required | max:30",
             "gender" => "required",
-            "date_of_birth" => "required"
+            "date_of_birth" => "required",
         ]);
 
         $user = User::create([
@@ -33,35 +41,38 @@ class ApiAuthController extends Controller
         ]);
 
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
             "email" => "required|email",
-            "password" => "required|min:8"
+            "password" => "required|min:8",
         ]);
 
-        if(!Auth::attempt($request->only('email','password'))){
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
             ]);
         }
 
-        return Auth::user()->createToken('admin-token',['admin']);
+        return Auth::user()->createToken('admin-token', ['admin']);
 
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::user()->currentAccessToken()->delete();
         return response()->json([
-            "message" => "logout successful"
+            "message" => "logout successful",
         ]);
     }
 
-    public function logoutAll(){
+    public function logoutAll()
+    {
         foreach (Auth::user()->tokens as $token) {
             $token->delete();
         }
         return response()->json([
-            "message" => "logout all devices successful"
+            "message" => "logout all devices successful",
         ]);
     }
 
@@ -69,7 +80,6 @@ class ApiAuthController extends Controller
     //     return Auth::user()->tokens;
     // }
 }
-
 
 //TOtal Stock ထည့်ရန်
 // Voucher ထုတ်တိုင်း Record Create လုပ်ရန်
