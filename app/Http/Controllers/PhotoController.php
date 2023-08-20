@@ -29,20 +29,21 @@ class PhotoController extends Controller
 
     public function store(StorePhotoRequest $request)
     {
-        if ($request->hasFile('photos')) {
-            $photos = $request->file('photos');
+        if ($request->hasFile('photo')) {
+            $photos = $request->file('photo');
             $savedPhotos = [];
             foreach ($photos as $photo) {
                 $name = md5(pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME));
                 $savedPhoto = $photo->store("public/photo");
+                $size = $photo->getSize();
                 $savedPhotos[] = [
                     "url" => $savedPhoto,
                     "name" => $name,
                     "ext" => $photo->extension(),
                     "user_id" => Auth::id(),
+                    "size" => $size,
                     "created_at" => now(),
                     "updated_at" => now(),
-
                 ];
             }
             Photo::insert($savedPhotos);
@@ -65,7 +66,7 @@ class PhotoController extends Controller
         return new PhotoDetailResource($photo);
     }
 
-   
+
     public function update(Request $request, string $id)
     {
         //
