@@ -7,37 +7,32 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Dotenv\Util\Str;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
 //clean
 class ProductController extends Controller
 {
-
-    // 112
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $products = Product::latest("id")->paginate(5)->withQueryString();
+        $query = request()->input('query');
+
+        $products = Product::when($query, function ($queryBuilder, $query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+            // ->orWhere('brand', 'like', "%$query%");
+        })
+            ->when(request()->has('id'), function ($query) {
+                $sortType = request()->id ?? 'asc';
+                $query->orderBy("id", $sortType);
+            })
+            ->latest("id")
+            ->paginate(10)
+            ->withQueryString();
         return ProductResource::collection($products);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    } 
+    
     public function store(StoreProductRequest $request)
     {
-
         $product = Product::create([
             'name' => $request->name,
             'brand_id' => $request->brand_id,
@@ -46,36 +41,20 @@ class ProductController extends Controller
             'unit' => $request->unit,
             'more_information' => $request->more_information,
             'user_id' => Auth::id(),
-            'photo' => $request->photo
+            'photo' => $request->photo,
         ]);
-
         return new ProductDetailResource($product);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $product = Product::find($id);
         if (is_null($product)) {
             return response()->json(['message' => 'Product not found'], 404);
         }
-
         return new ProductDetailResource($product);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProductRequest $request, string $id)
     {
         $product = Product::find($id);
@@ -83,10 +62,8 @@ class ProductController extends Controller
             return response()->json([
                 // "success" => false,
                 "message" => "Product not found",
-
             ], 404);
         }
-
         $product->update([
             'name' => $request->name,
             'brand_id' => $request->brand_id,
@@ -94,15 +71,12 @@ class ProductController extends Controller
             'sale_price' => $request->sale_price,
             'unit' => $request->unit,
             'more_information' => $request->more_information,
-            'photo' => $request->photo
+            'photo' => $request->photo,
         ]);
 
         return new ProductDetailResource($product);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $product = Product::find($id);
