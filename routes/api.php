@@ -25,6 +25,7 @@ Route::prefix("v1")->group(function () {
         Route::post("register", [ApiAuthController::class, 'register']);
         Route::apiResource("photo", PhotoController::class);
 
+        Route::post("check-out", [CheckoutController::class, 'run']);
     });
 
     Route::post("login", [ApiAuthController::class, 'login']);
