@@ -67,7 +67,7 @@ https://d.mmsdev.site/api/v1/user-ban/13
 
 ### UnBan User (Delete)
 ```
-https://d.mmsdev.site/api/v1/user-umban/13
+https://d.mmsdev.site/api/v1/user-unban/13
 ```
 
 # Product
