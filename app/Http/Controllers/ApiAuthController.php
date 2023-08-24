@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
 
 class ApiAuthController extends Controller
 {
@@ -54,6 +55,15 @@ class ApiAuthController extends Controller
                 "message" => "Username or password wrong",
             ]);
         }
+
+        $user = Auth::user();
+        $token = $user->createToken('admin-token',['admin']);
+
+        return response()->json([
+            'name' => $user->name,
+            'token' => explode("|", $token->plainTextToken)[1],
+            'id' => $user->id,
+        ]);
         
         if (Auth::user()->ban == true) {
             return response()->json([

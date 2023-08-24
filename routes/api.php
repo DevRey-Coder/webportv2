@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PhotoController;
@@ -32,7 +33,7 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("photo", PhotoController::class);
 //         Route::apiResource("user", UserController::class);
 
-        Route::post("check-out", [CheckoutController::class, 'run']);
+        Route::post("check-out", [CheckoutController::class, 'checkout']);
     });
 
     Route::post("login", [ApiAuthController::class, 'login']);

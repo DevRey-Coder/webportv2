@@ -7,24 +7,30 @@ use App\Models\Voucher;
 use App\Models\VoucherRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-    public function run(Request $request){
+    public function checkout(Request $request)
+    {
         $productIds = collect($request->items)->pluck("product_id");
-        $products = Product::whereIn("id",$productIds)->get(); // use database
+        $products = Product::whereIn("id", $productIds)->get(); // use database
         $total = 0;
 
-        foreach($request->items as $item){
+        foreach ($request->items as $item) {
             $total += $item["quantity"] * $products->find($item["product_id"])->sale_price;
-
         }
 
         $tax = $total * 0.05;
         $netTotal = $total + $tax;
 
+        $voucherNumber = random_int(1000, 9999);
+
+        // Generate a random string of letters and numbers
+        $randomString = Str::random(3);
+
         $voucher = Voucher::create([
-            "voucher_number" => $request->voucher_number,
+            "voucher_number" =>  $voucherNumber.$randomString,
             "total" => $total,
             "tax" => $tax,
             "net_total" => $netTotal,
@@ -33,7 +39,7 @@ class CheckoutController extends Controller
 
         $records = [];
 
-        foreach($request->items as $item){
+        foreach ($request->items as $item) {
 
             $currentProduct = $products->find($item["product_id"]);
             $records[] = [

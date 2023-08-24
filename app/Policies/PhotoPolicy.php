@@ -29,6 +29,7 @@ class PhotoPolicy
      */
     public function view(User $user, Photo $photo): bool
     {
+        return false;
         return $user->id == $photo->user_id;
     }
 

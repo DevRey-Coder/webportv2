@@ -15,6 +15,7 @@ class StockController extends Controller
 {
     public function index()
     {
+        // $this->authorize('view-admin');
         $stocks = Stock::latest("id")->paginate(5)->withQueryString();
         return StockResource::collection($stocks);
     }
