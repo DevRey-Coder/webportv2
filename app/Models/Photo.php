@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     use HasFactory;
-    protected $fillable = ['url', 'name', 'ext', 'user_id', 'created_at', 'updated_at'];
+    protected $fillable = ['url', 'name', 'ext', 'user_id', 'size','created_at', 'updated_at'];
     public function user()
     {
         return $this->belongsTo(User::class);

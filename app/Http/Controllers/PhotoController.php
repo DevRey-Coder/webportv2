@@ -29,18 +29,19 @@ class PhotoController extends Controller
 
     public function store(StorePhotoRequest $request)
     {
-        // dd(pathinfo($request->file('photo')));
         if ($request->hasFile('photo')) {
             $photos = $request->file('photo');
             $savedPhotos = [];
             foreach ($photos as $photo) {
                 $name = md5(pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME));
                 $savedPhoto = $photo->store("public/photo");
+                $size = $photo->getSize()/1024/1024;
                 $savedPhotos[] = [
                     "url" => $savedPhoto,
                     "name" => $name,
                     "ext" => $photo->extension(),
                     "user_id" => Auth::id(),
+                    "size" => $size,
                     "created_at" => now(),
                     "updated_at" => now(),
                 ];

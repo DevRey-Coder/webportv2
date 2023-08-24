@@ -18,7 +18,8 @@ class PhotoSeeder extends Seeder
             "url" => config('info.default_contact_photo'),
             "name" => config('info.default_photo_name'),
             "ext" => config('info.ext'),
-            "user_id" => 1
+            "user_id" => 1,
+            "size" => rand(1, 100)
         ]);
         
         $files = Storage::allFiles('public/photo');

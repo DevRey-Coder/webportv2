@@ -12,10 +12,10 @@ class VoucherRecord extends Model
     public function voucher(){
         return $this->belongsTo(Voucher::class);
     }
-    
+
     public function product(){
         return $this->belongsTo(Product::class);
     }
-    protected $fillable = ["voucher_id", "product_id", "quantity", "cost"];
-    
+    protected $fillable = ["voucher_id", "product_id", "quantity", "cost","price"];
+
 }
