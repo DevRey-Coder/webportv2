@@ -4,52 +4,74 @@
 #### Register (Post)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/register
+  https://d.mmsdev.site/api/v1/register
 ```
 
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `name` | `string` | **Required** example |
-| `email` | `string` | **Required** example@gmail.com |
+| `email` | `string` | **Required** admin@gmail.com |
 | `password` | `string` | **Required** asdffdsa |
 | `password_confirmation` | `string` | **Required** asdffdsa |
 
 ### Login(POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/login
+  https://d.mmsdev.site/api/v1/login
 ```
 
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `email` | `string` | **Required** aht@gmail.com |
+| `email` | `string` | **Required** lex@gmail.com |
 | `password` | `string` | **Required** asdffdsa |
 
 ### Logout (POST)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/logout
+   https://d.mmsdev.site/api/v1/logout
 ```
 ### LogoutAll (POST)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/logoutAll
+   https://d.mmsdev.site/api/v1/logoutAll
 ```
-## Product
+
+# User
+### Get All Users (GET)
+```
+https://d.mmsdev.site/api/v1/users
+```
+
+### Get Current User (GET)
+```
+https://d.mmsdev.site/api/v1/user-current
+```
+
+### Ban User (Post)
+```
+https://d.mmsdev.site/api/v1/user-ban/13
+```
+
+### UnBan User (Delete)
+```
+https://d.mmsdev.site/api/v1/user-umban/13
+```
+
+# Product
 ### Get Products (GET)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/product
+   https://d.mmsdev.site/api/v1/product
 ```
 ### Get Single Product (Get)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/product/{id}
+  https://d.mmsdev.site/api/v1/product/{id}
 ```
 ### Create Product (POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/product
+  https://d.mmsdev.site/api/v1/product
 ```
 
 | Arguments | Type     | Description                |
@@ -65,7 +87,7 @@
 ### Update Product (PUT)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/product/{id}
+  https://d.mmsdev.site/api/v1/product/{id}
 ```
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
@@ -81,24 +103,24 @@
 ### Delete Product (DELETE)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/product/{id}
+  https://d.mmsdev.site/api/v1/product/{id}
 ```
 
-## Brand
+# Brand
 ### Get Brands (GET)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/brand
+   https://d.mmsdev.site/api/v1/brand
 ```
 ### Get Single Brand (Get)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/brand/{id}
+  https://d.mmsdev.site/api/v1/brand/{id}
 ```
 ### Create Brand (POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/brand
+  https://d.mmsdev.site/api/v1/brand
 ```
 
 | Arguments | Type     | Description                |
@@ -112,7 +134,7 @@
 ### Update Brand (PUT)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/Brand/{id}
+  https://d.mmsdev.site/api/v1/Brand/{id}
 ```
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
@@ -125,70 +147,74 @@
 ### Delete Brand (DELETE)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/brand/{id}
+  https://d.mmsdev.site/api/v1/brand/{id}
 ```
 
-## Stock
+# Stock
 ### Get Stocks (GET)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/stock
+   https://d.mmsdev.site/api/v1/stock
 ```
 ### Get Single Stock (Get)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/stock/{id}
+  https://d.mmsdev.site/api/v1/stock/{id}
 ```
 ### Create Stock (POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/stock
+  https://d.mmsdev.site/api/v1/stock
 ```
 
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
+| `user_id` | `integer` | **Required** 6 |
+| `product_id` | `integer` | **Required** 5 |
 | `quantity` | `integer` | **Required** 4 |
 | `more` | `text` | **Required** bar nyar |
 
 ### Update Stock (PUT)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/stock/{id}
+  https://d.mmsdev.site/api/v1/stock/{id}
 ```
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
+| `user_id` | `integer` | **Required** 6 |
+| `product_id` | `integer` | **Required** 5 |
 | `quantity` | `integer` | **Required** 4 |
 | `more` | `text` | **Required** bar nyar |
 
 ### Delete Stock (DELETE)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/stock/{id}
+  https://d.mmsdev.site/api/v1/stock/{id}
 ```
 
-## Voucher
+# Voucher
 ### Get Vouchers (GET)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/voucher
+   https://d.mmsdev.site/api/v1/voucher
 ```
 ### Get Single Voucher (Get)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher/{id}
+  https://d.mmsdev.site/api/v1/voucher/{id}
 ```
 ### Create Voucher (POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher
+  https://d.mmsdev.site/api/v1/voucher
 ```
 
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `customer` | `string` | **Required** Lextor |
 | `phone` | `integer` | **Nullable** 09199199199 |
-| `voucher_number` | `string` | **Required** 77777 |
+| `voucher_number` | `string` | **Required** 7777L34 |
 | `total` | `integer` | **Required** 40000 |
 | `tax` | `integer` | **Required** 40 |
 | `net_total` | `integer` | **Required** 4000 |
@@ -197,7 +223,7 @@
 ### Update Voucher (PUT)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher/{id}
+  https://d.mmsdev.site/api/v1/voucher/{id}
 ```
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
@@ -212,46 +238,101 @@
 ### Delete Voucher (DELETE)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher/{id}
+  https://d.mmsdev.site/api/v1/voucher/{id}
 ```
 
-## Voucher-record
+# Voucher-record
 ### Get Voucher-records (GET)
 
 ```http
-   https://pos-app.mms-it.com/api/v1/voucher-record
+   https://d.mmsdev.site/api/v1/voucher-record
 ```
 ### Get Single Voucher-record (Get)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher-record/{id}
+  https://d.mmsdev.site/api/v1/voucher-record/{id}
 ```
 ### Create Voucher-record (POST)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher-record
+  https://d.mmsdev.site/api/v1/voucher-record
 ```
 
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
+| `voucher_id` | `integer` | **Required** 12345 |
+| `product_id` | `integer` | **Required** 2233 |
 | `quantity` | `integer` | **Required** 20 |
 | `cost` | `integer` | **Required** 2000 |
 
 ### Update Voucher-record (PUT)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher-record/{id}
+  https://d.mmsdev.site/api/v1/voucher-record/{id}
 ```
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
+| `voucher_id` | `integer` | **Required** 12345 |
+| `product_id` | `integer` | **Required** 2233 |
 | `quantity` | `integer` | **Required** 20 |
 | `cost` | `integer` | **Required** 2000 |
 
 ### Delete Voucher-record (DELETE)
 
 ```http
-  https://pos-app.mms-it.com/api/v1/voucher-record/{id}
+  https://mmsdev.site/api/v1/voucher-record/{id}
 ```
 
+# Photo
 
+### Get Photo (GET)
+
+```http
+   https://d.mmsdev.site/api/v1/photo
+```
+### Get Single photo (Get)
+
+```http
+  https://d.mmsdev.site/api/v1/photo/{id}
+```
+### Create Photo (POST)
+
+```http
+  https://d.mmsdev.site/api/v1/photo
+```
+
+| Arguments | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `photo[]` | `file` | **Required** cat-551554_640.jpg|
+
+### Delete Photo (DELETE)
+
+```http
+  https://mmsdev.site/api/v1/photo/{id}
+```
+# Sale
+
+#
+### Selling Products (Post)
+```
+https://mmsdev.site/api/v1/check-out
+```
+
+## raw (Json)
+
+```
+==Json==
+{
+    "items": [
+        {
+            "product_id": 1,
+            "quantity": 2
+        },
+        {
+            "product_id": 2,
+            "quantity": 1
+        }
+    ]
+}
+```

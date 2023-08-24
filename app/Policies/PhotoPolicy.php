@@ -21,7 +21,7 @@ class PhotoPolicy
      */
     public function view(User $user, Photo $photo): bool
     {
-        //
+        return false;
     }
 
     /**
