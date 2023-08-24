@@ -21,6 +21,7 @@ class PhotoSeeder extends Seeder
             "user_id" => 1,
             "size" => rand(1, 100)
         ]);
+        
         $files = Storage::allFiles('public/photo');
         Storage::delete($files);
     }

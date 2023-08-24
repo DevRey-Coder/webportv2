@@ -13,13 +13,19 @@ class ApiAuthController extends Controller
         $request->validate([
             "name" => "required|min:3",
             "email" => "required|email|unique:users",
-            "password" => "required|min:8|confirmed"
+            "password" => "required|min:8",
+            "address" => "required | max:30",
+            "gender" => "required",
+            "date_of_birth" => "required"
         ]);
 
         $user = User::create([
             "name" => $request->name,
             "email" => $request->email,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "address" => $request->address,
+            "gender" => $request->gender,
+            "date_of_birth" => $request->date_of_birth,
         ]);
 
         return response()->json([
