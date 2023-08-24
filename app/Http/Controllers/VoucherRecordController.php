@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\VoucherRecord;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +11,15 @@ class VoucherRecordController extends Controller
 {
     public function index()
     {
-        $voucherRecord = VoucherRecord::latest("id")->paginate(5)->withQueryString();
+        $voucherRecord = VoucherRecord::when(request()->has("keyword"), function ($query) {
+            $query->where(function (Builder $builder) {
+                $keyword = request()->keyword;
+
+                $builder->where("voucher_id", "like", "%" . $keyword . "%");
+            });
+        })->when(request()->has('price_Under_5000'), function ($query) {
+            $query->where('price', '<', 5000);})->latest("id")->paginate(5)->withQueryString();
+
         return response()->json($voucherRecord);
     }
 

@@ -20,7 +20,8 @@ class VoucherRecordFactory extends Factory
             "voucher_id" => rand(1, 5),
             "product_id" => rand(1, 20),
             "quantity" => rand(1, 100),
-            'cost' => rand(1, 100)
+            "cost" => rand(1, 100),
+            "price" => rand(1000,20000)
         ];
     }
 }
