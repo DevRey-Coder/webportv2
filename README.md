@@ -1,18 +1,23 @@
 # POS API example application
+
 ## Testing API
+
 ### API Reference
+
 #### Register (Post)
 
 ```http
   https://d.mmsdev.site/api/v1/register
 ```
 
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `name` | `string` | **Required** example |
-| `email` | `string` | **Required** admin@gmail.com |
-| `password` | `string` | **Required** asdffdsa |
-| `password_confirmation` | `string` | **Required** asdffdsa |
+| Arguments               | Type     | Description                    |
+| :---------------------- | :------- | :----------------------------- |
+| `name`                  | `string` | **Required / min:3** example           |
+| `email`                 | `string` | **Required / unique** example@gmail.com |
+| `password`              | `string` | **Required / min:8** asdffdsa          |
+| `address` | `string` | **Required / max:30**           |
+| `gender` | `string` | **Required**           |
+| `date_of_birth` | `string` | **Required 10/20/19**           |
 
 ### Login(POST)
 
@@ -30,6 +35,13 @@
 ```http
    https://d.mmsdev.site/api/v1/logout
 ```
+
+### LogoutAll (POST)
+
+```http
+   https://d.mmsdev.site/api/v1/logout-all
+```
+
 ### LogoutAll (POST)
 
 ```http
@@ -37,6 +49,7 @@
 ```
 
 # User
+=====
 ### Get All Users (GET)
 ```
 https://d.mmsdev.site/api/v1/users
@@ -58,47 +71,57 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ```
 
 # Product
+=======
+   https://d.mmsdev.site/api/v1/logout-all
+```
+
+## Product
+
 ### Get Products (GET)
 
 ```http
    https://d.mmsdev.site/api/v1/product
 ```
+
 ### Get Single Product (Get)
 
 ```http
   https://d.mmsdev.site/api/v1/product/{id}
 ```
+
 ### Create Product (POST)
 
 ```http
   https://d.mmsdev.site/api/v1/product
 ```
 
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `name` | `string` | **Required** Rice Toner |
-| `actual_price` | `integer` | **Required** 50000 |
-| `sale_price` | `integer` | **Required** 55000 |
-| `total_price` | `integer` | **Required** 55000 |
-| `unit` | `integer` | **Required** 1 |
-| `more_information` | `string` | **Required** bar nyar |
-| `photo` | `string` | **Required** jpg |
+| Arguments          | Type      | Description             |
+| :----------------- | :-------- | :---------------------- |
+| `name`             | `string`  | **Required** Rice Toner |
+| `actual_price`     | `integer` | **Required** 50000      |
+| `sale_price`       | `integer` | **Required** 55000      |
+| `total_price`      | `integer` | **Required** 55000      |
+| `unit`             | `integer` | **Required** 1          |
+| `more_information` | `string`  | **Required** bar nyar   |
+| `photo`            | `string`  | **Required** jpg        |
 
 ### Update Product (PUT)
 
 ```http
   https://d.mmsdev.site/api/v1/product/{id}
 ```
-  #### You can update with only singe Parameter or more
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `name` | `string` | **Required** Rice Toner |
-| `actual_price` | `integer` | **Required** 50000 |
-| `sale_price` | `integer` | **Required** 55000 |
-| `total_price` | `integer` | **Required** 55000 |
-| `unit` | `integer` | **Required** 1 |
-| `more_information` | `string` | **Required** bar nyar |
-| `photo` | `string` | **Required** jpg |
+
+#### You can update with only singe Parameter or more
+
+| Arguments          | Type      | Description             |
+| :----------------- | :-------- | :---------------------- |
+| `name`             | `string`  | **Required** Rice Toner |
+| `actual_price`     | `integer` | **Required** 50000      |
+| `sale_price`       | `integer` | **Required** 55000      |
+| `total_price`      | `integer` | **Required** 55000      |
+| `unit`             | `integer` | **Required** 1          |
+| `more_information` | `string`  | **Required** bar nyar   |
+| `photo`            | `string`  | **Required** jpg        |
 
 ### Delete Product (DELETE)
 
@@ -107,42 +130,46 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ```
 
 # Brand
+
 ### Get Brands (GET)
 
 ```http
    https://d.mmsdev.site/api/v1/brand
 ```
+
 ### Get Single Brand (Get)
 
 ```http
   https://d.mmsdev.site/api/v1/brand/{id}
 ```
+
 ### Create Brand (POST)
 
 ```http
   https://d.mmsdev.site/api/v1/brand
 ```
 
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `name` | `string` | **Required** Lexus |
-| `company` | `string` | **Required** TOYOTA |
-| `information` | `text` | **Required** bar nyar |
-| `photo` | `string` | **Required** jpg |
-
+| Arguments     | Type     | Description           |
+| :------------ | :------- | :-------------------- |
+| `name`        | `string` | **Required** Lexus    |
+| `company`     | `string` | **Required** TOYOTA   |
+| `information` | `text`   | **Required** bar nyar |
+| `photo`       | `string` | **Required** jpg      |
 
 ### Update Brand (PUT)
 
 ```http
-  https://d.mmsdev.site/api/v1/Brand/{id}
+  https://d.mmsdev.site/api/v1/brand/{id}
 ```
-  #### You can update with only singe Parameter or more
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `name` | `string` | **Required** Lexus |
-| `company` | `string` | **Required** TOYOTA |
-| `information` | `text` | **Required** bar nyar |
-| `photo` | `string` | **Required** jpg |
+
+#### You can update with only singe Parameter or more
+
+| Arguments     | Type     | Description           |
+| :------------ | :------- | :-------------------- |
+| `name`        | `string` | **Required** Lexus    |
+| `company`     | `string` | **Required** TOYOTA   |
+| `information` | `text`   | **Required** bar nyar |
+| `photo`       | `string` | **Required** jpg      |
 
 ### Delete Brand (DELETE)
 
@@ -151,16 +178,19 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ```
 
 # Stock
+
 ### Get Stocks (GET)
 
 ```http
    https://d.mmsdev.site/api/v1/stock
 ```
+
 ### Get Single Stock (Get)
 
 ```http
   https://d.mmsdev.site/api/v1/stock/{id}
 ```
+
 ### Create Stock (POST)
 
 ```http
@@ -194,16 +224,19 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ```
 
 # Voucher
+
 ### Get Vouchers (GET)
 
 ```http
    https://d.mmsdev.site/api/v1/voucher
 ```
+
 ### Get Single Voucher (Get)
 
 ```http
   https://d.mmsdev.site/api/v1/voucher/{id}
 ```
+
 ### Create Voucher (POST)
 
 ```http
@@ -219,21 +252,22 @@ https://d.mmsdev.site/api/v1/user-umban/13
 | `tax` | `integer` | **Required** 40 |
 | `net_total` | `integer` | **Required** 4000 |
 
-
 ### Update Voucher (PUT)
 
 ```http
   https://d.mmsdev.site/api/v1/voucher/{id}
 ```
-  #### You can update with only singe Parameter or more
-| Arguments | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `customer` | `string` | **Required** Lextor |
-| `phone` | `integer` | **Nullable** 09199199199 |
-| `voucher_number` | `string` | **Required** 77777 |
-| `total` | `integer` | **Required** 40000 |
-| `tax` | `integer` | **Required** 40 |
-| `net_total` | `integer` | **Required** 4000 |
+
+#### You can update with only singe Parameter or more
+
+| Arguments        | Type      | Description              |
+| :--------------- | :-------- | :----------------------- |
+| `customer`       | `string`  | **Required** Lextor      |
+| `phone`          | `integer` | **Nullable** 09199199199 |
+| `voucher_number` | `string`  | **Required** 77777       |
+| `total`          | `integer` | **Required** 40000       |
+| `tax`            | `integer` | **Required** 40          |
+| `net_total`      | `integer` | **Required** 4000        |
 
 ### Delete Voucher (DELETE)
 
@@ -245,13 +279,15 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ### Get Voucher-records (GET)
 
 ```http
-   https://d.mmsdev.site/api/v1/voucher-record
+  https://d.mmsdev.site/api/v1/voucher-record
 ```
+
 ### Get Single Voucher-record (Get)
 
 ```http
-  https://d.mmsdev.site/api/v1/voucher-record/{id}
+ https://d.mmsdev.site/api/v1/voucher-record/{id}
 ```
+
 ### Create Voucher-record (POST)
 
 ```http
@@ -270,6 +306,7 @@ https://d.mmsdev.site/api/v1/user-umban/13
 ```http
   https://d.mmsdev.site/api/v1/voucher-record/{id}
 ```
+
   #### You can update with only singe Parameter or more
 | Arguments | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -297,6 +334,25 @@ https://d.mmsdev.site/api/v1/user-umban/13
   https://d.mmsdev.site/api/v1/photo/{id}
 ```
 ### Create Photo (POST)
+=======
+  https://d.mmsdev.site/api/v1/voucher-record/{id}
+```
+
+## Media
+
+### Get Media (GET)
+
+```http
+  https://d.mmsdev.site/api/v1/photo
+```
+
+### Get Single Media (Get)
+
+```http
+ https://d.mmsdev.site/api/v1/photo/{id}
+```
+
+### Create Media (POST)
 
 ```http
   https://d.mmsdev.site/api/v1/photo
@@ -335,4 +391,13 @@ https://mmsdev.site/api/v1/check-out
         }
     ]
 }
+=======
+| Arguments | Type           | Description  |
+| :-------- | :------------- | :----------- |
+| `photo[]` | `png,jpg,jpeg` | **Required** |
+
+### Delete Media (DELETE)
+
+```http
+  https://d.mmsdev.site/api/v1/photo/{id}
 ```
