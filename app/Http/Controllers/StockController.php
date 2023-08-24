@@ -13,26 +13,13 @@ use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
+        // $this->authorize('view-admin');
         $stocks = Stock::latest("id")->paginate(5)->withQueryString();
         return StockResource::collection($stocks);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreStockRequest $request)
     {
         $stock = new Stock([
@@ -63,17 +50,6 @@ class StockController extends Controller
         return new StockDetailResource($stock);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Stock $stock)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateStockRequest $request, string $id)
     {
         $stock = Stock::find($id);
@@ -81,7 +57,6 @@ class StockController extends Controller
             return response()->json([
                 // "success" => false,
                 "message" => "Stock not found",
-
             ], 404);
         }
 
@@ -94,9 +69,6 @@ class StockController extends Controller
         return new StockDetailResource($stock);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $stock = Stock::find($id);
@@ -104,11 +76,9 @@ class StockController extends Controller
             return response()->json([
                 // "success" => false,
                 "message" => "Stock not found",
-
             ], 404);
         }
         $stock->delete();
-
         // return response()->json([],204);
         return response()->json([
             "message" => "Stock is deleted",

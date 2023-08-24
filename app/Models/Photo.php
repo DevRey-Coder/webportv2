@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','url','ext','user_id','media_id'];
-    public function media(){
-        return $this->belongsTo(Media::class);
+    protected $fillable = ['url', 'name', 'ext', 'user_id', 'size','created_at', 'updated_at'];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
