@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Media;
+use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ApiAuthController extends Controller
 {
@@ -21,16 +24,12 @@ class ApiAuthController extends Controller
         $request->validate([
             "name" => "required|min:3",
             "email" => "required|email|unique:users",
-            "password" => "required|min:8|confirmed",
             "role" => "in:admin,staff",
             "phone_number" => "nullable|string",
             "gender" => "required|in:male,female",
             "date_of_birth" => "required|date",
-            "address" => "required|string",
             "password" => "required|min:8",
             "address" => "required | max:30",
-            "gender" => "required",
-            "date_of_birth" => "required",
         ]);
 
         $user = User::create([
@@ -42,11 +41,6 @@ class ApiAuthController extends Controller
             "gender" => $request->gender,
             "date_of_birth" => $request->date_of_birth,
             "address" => $request->address,
-            "address" => $request->address,
-            "gender" => $request->gender,
-            "role" => $request->role,
-            "phone_number" => $request->phone_number,
-            "date_of_birth" => $request->date_of_birth,
         ]);
 
         if($request->hasFile('user_photo')){
@@ -69,7 +63,6 @@ class ApiAuthController extends Controller
             ]);
 
             $media->photo()->save($photo);
-
             $user->update(['user_photo'=>$photo->url]);
         }
 
@@ -84,6 +77,12 @@ class ApiAuthController extends Controller
             "email" => "required|email",
             "password" => "required|min:8",
         ]);
+        
+        if (Auth::user()->ban == true) {
+            return response()->json([
+                "message" => "Your account is banned.",
+            ]);
+        }
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
@@ -99,13 +98,6 @@ class ApiAuthController extends Controller
             'token' => explode("|", $token->plainTextToken)[1],
             'id' => $user->id,
         ]);
-        
-        if (Auth::user()->ban == true) {
-            return response()->json([
-                "message" => "Your account is banned.",
-            ]);
-        }
-        return Auth::user()->createToken('admin-token', ['admin']);
     }
 
     public function changePassword(Request $request){
