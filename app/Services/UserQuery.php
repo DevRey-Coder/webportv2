@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 
 class UserQuery
 {
+    //second
     protected $safeParams = [
         'name' => ['eq'],
         'email' => ['eq'],
