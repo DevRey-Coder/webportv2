@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\V1\UserFilter;
 use App\Http\Resources\UserQueryResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
 use App\Models\Photo;
 use App\Models\User;
-use App\Services\UserQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -80,14 +80,12 @@ class ApiAuthController extends Controller
             "password" => "required|min:8",
         ]);
 
-       
-
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
             ]);
         }
-        
+
         if (Auth::user()->ban == true) {
             return response()->json([
                 "message" => "Your account is banned.",
@@ -159,27 +157,14 @@ class ApiAuthController extends Controller
     }
     public function showAllUser(Request $request)
     {
-        $filter = new UserQuery();
+        $filter = new UserFilter();
         $queryItems = $filter->transform($request);
         if (count($queryItems) == 0) {
-            return UserResource::collection(User::paginate());
+            return UserResource::collection(User::paginate(5));
         } else {
-            return new UserQueryResource(User::where($queryItems)->paginate());
+            $users = User::where($queryItems)->latest("id")->paginate(5)->withQueryString();
+            return new UserQueryResource($users->appends($request->query()));
         }
-        // $query = request()->input('query');
-
-        // $users = User::when($query, function ($queryBuilder, $query) {
-        //     return $queryBuilder->where('name', 'like', "%$query%");
-        //     // ->orWhere('brand', 'like', "%$query%");
-        // })
-        //     ->when(request()->has('id'), function ($query) {
-        //         $sortType = request()->id ?? 'asc';
-        //         $query->orderBy("id", $sortType);
-        //     })
-        //     ->latest("id")
-        //     ->paginate(10)
-        //     ->withQueryString();
-        // return UserResource::collection($users);
     }
 
     public function ban(string $id)

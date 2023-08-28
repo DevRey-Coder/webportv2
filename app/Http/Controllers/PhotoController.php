@@ -8,10 +8,8 @@ use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
 use App\Models\Media;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {

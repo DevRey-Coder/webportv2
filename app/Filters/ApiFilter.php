@@ -1,24 +1,14 @@
 <?php
-namespace App\Services;
+namespace App\Filters;
 
 use Illuminate\Http\Request;
 
-class UserQuery
+class ApiFilter
 {
     //second
-    protected $safeParams = [
-        'name' => ['eq'],
-        'email' => ['eq'],
-        'role' => ['eq'],
-        'phone_number' => ['eq'],
-        'gender' => ['eq'],
-        'date_of_birth' => ['eq'],
-        'address' => ['eq'],
-    ];
+    protected $safeParams = [];
     protected $columnMap = [];
-    protected $operatorMap = [
-        'eq' => '=',
-    ];
+    protected $operatorMap = [];
     public function transform(Request $request)
     {
         $eloQuery = [];
@@ -37,3 +27,4 @@ class UserQuery
         return $eloQuery;
     }
 }
+ 
