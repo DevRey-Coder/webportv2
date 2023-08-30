@@ -163,7 +163,7 @@ class ApiAuthController extends Controller
             return UserResource::collection(User::paginate(5));
         } else {
             $users = User::where($queryItems)->latest("id")->paginate(5)->withQueryString();
-            return new UserQueryResource($users->appends($request->query()));
+            return  UserQueryResource::collection($users->appends($request->query()));
         }
     }
 
