@@ -137,7 +137,8 @@ class ApiAuthController extends Controller
     public function logoutAll()
     {
         foreach (Auth::user()->tokens as $token) {
-            $token->delete();
+               $token->delete();
+
         }
         return response()->json([
             "message" => "logout all devices successful",

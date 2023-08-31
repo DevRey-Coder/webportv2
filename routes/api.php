@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\DailySaleController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
@@ -31,7 +32,14 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("voucher", VoucherController::class);
         Route::apiResource("voucher-record", VoucherRecordController::class);
         Route::post("register", [ApiAuthController::class, 'register']);
+
         Route::apiResource("photo", PhotoController::class);
+        Route::post('session-on',[DailySaleController::class,'sessionOn']);
+        Route::post('session-off',[DailySaleController::class,'sessionOff']);
+//        Route::post("session-off", DailySaleController::class);
+
+
+
 //         Route::apiResource("user", UserController::class);
 
         Route::post("check-out", [CheckoutController::class, 'checkout']);

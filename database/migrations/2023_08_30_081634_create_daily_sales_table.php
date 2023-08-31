@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('daily_sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
+            $table->dateTime('start')->nullable();
+            $table->dateTime('end')->nullable();
+            $table->dateTime('time')->nullable();
+            $table->string('voucher_number')->nullable();
+            $table->integer('cash')->nullable();
+            $table->integer('tax')->nullable();
+            $table->integer('total')->nullable();
+            $table->integer('count')->nullable();
+
             $table->timestamps();
         });
     }

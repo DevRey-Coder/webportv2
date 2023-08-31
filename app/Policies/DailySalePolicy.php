@@ -16,6 +16,11 @@ class DailySalePolicy
         //
     }
 
+    public function cashierOff(User $user): bool
+    {
+
+    }
+
     /**
      * Determine whether the user can view the model.
      */

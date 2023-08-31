@@ -6,7 +6,7 @@ use App\Filters\ApiFilter;
 class BrandFilter extends ApiFilter
 {
     //second
-    protected $safeParams = [
+    protected array $safeParams = [
         'id' => ['eq', 'gt', 'gte', 'lt', 'lte', 'ne'],
         'name' => ['eq', 'lk'],
         'email' => ['eq'],
@@ -16,12 +16,12 @@ class BrandFilter extends ApiFilter
         'dateOfBirth' => ['eq'],
         'address' => ['eq'],
     ];
-    protected $columnMap = [
+    protected array $columnMap = [
         'phoneNumber' => 'phone_number',
         'dateOfBirth' => 'date_of_birth',
 
     ];
-    protected $operatorMap = [
+    protected array $operatorMap = [
         'eq' => '=',
         'lt' => '<',
         'lte' => '<=',
