@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_sales', function (Blueprint $table) {
+        Schema::create('daily_sale_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->dateTime('start')->nullable();
-            $table->dateTime('end')->nullable();
-//            $table->dateTime('time')->nullable();
-
-
+            $table->string('voucher_number')->nullable();
+            $table->integer('cash')->nullable();
+            $table->integer('tax')->nullable();
+            $table->integer('total')->nullable();
+            $table->integer('count')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_sales');
+        Schema::dropIfExists('daily_sale_records');
     }
 };

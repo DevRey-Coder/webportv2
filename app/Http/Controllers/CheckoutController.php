@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailySale;
+use App\Models\DailySaleRecord;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -46,13 +48,14 @@ class CheckoutController extends Controller
             "user_id" => Auth::id(),
         ]); // use database
 
-        $session = DailySale::orderBy('id', 'desc')->first();
+//        $session = DailySale::orderBy('id', 'desc')->first();
         $voucherSelector = Voucher::orderBy('id', 'desc')->first();
-        $session->voucher_number = $voucherSelector->voucher_number;
-        $session->cash = $voucherSelector->total;
-        $session->tax = $voucherSelector->tax;
-        $session->total = $voucherSelector->net_total;
-        $session->save();
+        $saleRecord = DailySaleRecord::create([
+           "voucher_number" => $voucherSelector->voucher_number,
+            'cash'=>$voucherSelector->total,
+            'tax' => $voucherSelector->tax,
+           'total' => $voucherSelector->net_total,
+        ]);
 
         $records = [];
 
@@ -75,12 +78,14 @@ class CheckoutController extends Controller
 
         $voucherRecords = VoucherRecord::insert($records); // use database
         // dd($voucherRecords);
-        $voucherRecordSelector = VoucherRecord::orderBy('id', 'desc')->first();
-        $session->count = $voucherRecordSelector->quantity;
-        $session->save();
+        $date = Carbon::now()->format('Y-m-d H:i:s');
 
-
+        $voucherRecordSelector = VoucherRecord::Where('created_at', $date)->get();
+                $record = DailySaleRecord::orderBy('id', 'desc')->first();
+                $record->count = $voucherRecordSelector->sum('quantity');
+                $record->save();
 
         return $request;
+
     }
 }

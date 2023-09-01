@@ -32,7 +32,7 @@ class DailySaleController extends Controller
             $session = DailySale::create([
                 'user_id' => Auth::id(),
                 'start' => $date->format('Y-m-d H:i:s'),
-                'time' => $date->format('Y-m-d H:i:s'),
+//                'time' => $date->format('Y-m-d H:i:s'),
             ]);
             return new DailySaleResource($session);
         }
