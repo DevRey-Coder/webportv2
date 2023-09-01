@@ -32,6 +32,7 @@ class ApiAuthController extends Controller
             "date_of_birth" => "required|date",
             "password" => "required|min:8",
             "address" => "required | max:30",
+
         ]);
 
         $user = User::create([

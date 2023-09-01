@@ -48,7 +48,6 @@ class CheckoutController extends Controller
             "user_id" => Auth::id(),
         ]); // use database
 
-//        $session = DailySale::orderBy('id', 'desc')->first();
         $voucherSelector = Voucher::orderBy('id', 'desc')->first();
         $saleRecord = DailySaleRecord::create([
            "voucher_number" => $voucherSelector->voucher_number,
