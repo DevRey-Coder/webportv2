@@ -77,16 +77,16 @@ class ApiAuthController extends Controller
             "email" => "required|email",
             "password" => "required|min:8",
         ]);
-        
-        if (Auth::user()->ban == true) {
-            return response()->json([
-                "message" => "Your account is banned.",
-            ]);
-        }
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
+            ]);
+        }
+
+        if (Auth::user()->ban == true) {
+            return response()->json([
+                "message" => "Your account is banned.",
             ]);
         }
 
@@ -150,7 +150,7 @@ class ApiAuthController extends Controller
         // return UserResource::collection($user);
         // return response()->json($user);
         return new UserResource($user);
-        
+
     }
     public function showAllUser()
     {

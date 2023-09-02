@@ -3,6 +3,7 @@
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\DailySaleController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
@@ -32,15 +33,17 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("voucher-record", VoucherRecordController::class);
         Route::post("register", [ApiAuthController::class, 'register']);
         Route::apiResource("photo", PhotoController::class);
-//         Route::apiResource("user", UserController::class);
+        //         Route::apiResource("user", UserController::class);
+
+        Route::get('dailySale', [DailySaleController::class, 'dailySale']);
 
         Route::post("check-out", [CheckoutController::class, 'checkout']);
     });
 
     Route::post("login", [ApiAuthController::class, 'login']);
-//     Route::get("media",[MediaController::class,'index']);
-//     Route::get("media/{media}",[MediaController::class,'show']);
+    //     Route::get("media",[MediaController::class,'index']);
+    //     Route::get("media/{media}",[MediaController::class,'show']);
 
-//     Route::delete('photo/{photo}',[PhotoController::class,'destroy']);
-//     Route::put('photo/{photo}',[PhotoController::class,'update']);
+    //     Route::delete('photo/{photo}',[PhotoController::class,'destroy']);
+    //     Route::put('photo/{photo}',[PhotoController::class,'update']);
 });
