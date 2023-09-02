@@ -22,16 +22,18 @@ class DailySaleRecordSeeder extends Seeder
         $DailyTotalSale = [];
         foreach ($period as $day) {
             $date = $day;
-            $dailyVoucher = Voucher::WhereDate('created_at', $date)->get();
-            $totalVoucher = $dailyVoucher->count('id');
-            $total = $dailyVoucher->sum('total');
-            $taxTotal = $dailyVoucher->sum('tax');
-            $netTotal = $dailyVoucher->sum('net_total');
+            $dailyVoucher = rand(1000,9999);
+//            $totalVoucher = $dailyVoucher->count('id');
+//            $total = $dailyVoucher->sum('total');
+//            $taxTotal = $dailyVoucher->sum('tax');
+//            $netTotal = $dailyVoucher->sum('net_total');
             $DailyTotalSale[] = [
-                "voucher" => $totalVoucher,
-                "total_cash" => $total,
-                "tax_total" => $taxTotal,
-                "total" => $netTotal,
+                "voucher_number" => $dailyVoucher,
+                "cash" => rand(1000,9999),
+                "total" => rand(10000,99999),
+                "count" => rand(1,10),
+                'tax'=>rand(100,999),
+                'time'=> substr($day,0,10),
                 "created_at" => $day,
                 "updated_at" => $day
             ];

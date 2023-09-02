@@ -4,22 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDailySaleRecordRequest;
 use App\Http\Requests\UpdateDailySaleRecordRequest;
+use App\Http\Resources\BrandResource;
+use App\Http\Resources\DailySaleResource;
+use App\Models\Brand;
 use App\Models\DailySaleRecord;
+use Illuminate\Support\Carbon;
 
 class DailySaleRecordController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function daily()
     {
-        //
+        $carbon = Carbon::now();
+
+        $query = request()->input('query');
+        $dailySale = DailySaleRecord::when($query, function ($queryBuilder, $query) {
+            return $queryBuilder->where('time', 'like', "%$query%");
+            // ->orWhere('brand', 'like', "%$query%");
+        })
+            ->when(request()->has('id'), function ($query) {
+                $sortType = request()->id ?? 'asc';
+                $query->orderBy("id", $sortType);
+            })
+            ->latest("id")->paginate(5)->withQueryString();
+        return DailySaleResource::collection($dailySale);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreDailySaleRecordRequest $request)
+    public function dailyTotal()
+    {
+        $carbon = Carbon::now();
+        $date = $carbon->format('Y-m-d');
+        $total = DailySaleRecord::where('time', '2023-09-01')->get();
+
+        $dailyTotal = [];
+       $dailyTotal[] = $total->sum('cash');
+       $dailyTotal[] = $total->sum('total');
+        return response()->json($dailyTotal);
+
+    }
+
+    public function monthly(StoreDailySaleRecordRequest $request)
     {
         //
     }

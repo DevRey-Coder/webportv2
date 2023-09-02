@@ -6,7 +6,8 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
-use App\Http\Controllers\DailySaleController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\DailySaleRecordController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
@@ -34,9 +35,11 @@ Route::prefix("v1")->group(function () {
         Route::post("register", [ApiAuthController::class, 'register']);
 
         Route::apiResource("photo", PhotoController::class);
-        Route::post('session-on',[DailySaleController::class,'sessionOn']);
-        Route::post('session-off',[DailySaleController::class,'sessionOff']);
-//        Route::post("session-off", DailySaleController::class);
+        Route::post('session-on',[SessionController::class,'sessionOn']);
+        Route::post('session-off',[SessionController::class,'sessionOff']);
+        Route::get('daily',[DailySaleRecordController::class,'daily']);
+        Route::get('daily-total',[DailySaleRecordController::class,'dailyTotal']);
+//        Route::post("session-off", SessionController::class);
 
 
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('tax')->nullable();
             $table->integer('total')->nullable();
             $table->integer('count')->nullable();
+            $table->string('time')->nullable();
             $table->timestamps();
         });
     }

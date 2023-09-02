@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDailySaleRequest;
 use App\Http\Requests\UpdateDailySaleRequest;
-use App\Http\Resources\DailySaleResource;
+use App\Http\Resources\SessionResource;
 use App\Models\DailySale;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class DailySaleController extends Controller
+class SessionController extends Controller
 {
 
 
@@ -34,7 +34,7 @@ class DailySaleController extends Controller
                 'start' => $date->format('Y-m-d H:i:s'),
 //                'time' => $date->format('Y-m-d H:i:s'),
             ]);
-            return new DailySaleResource($session);
+            return new SessionResource($session);
         }
           return response()->json([
               "message" => "Your session has continued"
