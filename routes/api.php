@@ -36,6 +36,9 @@ Route::prefix("v1")->group(function () {
         //         Route::apiResource("user", UserController::class);
 
         Route::get('dailySale', [DailySaleController::class, 'dailySale']);
+        Route::get('monthlySale/{month}', [DailySaleController::class, 'monthlySale']);
+        Route::get('yearlySale/{year}', [DailySaleController::class, 'yearlySale']);
+        Route::get('customSale?date={date}',[DailySaleController::class,'customSale']);
 
         Route::post("check-out", [CheckoutController::class, 'checkout']);
     });
