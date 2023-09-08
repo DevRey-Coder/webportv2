@@ -47,12 +47,13 @@ class CheckoutController extends Controller
             "net_total" => $netTotal,
             "user_id" => Auth::id(),
         ]); // use database
-
+        $carbon = Carbon::now();
         $voucherSelector = Voucher::orderBy('id', 'desc')->first();
         $saleRecord = DailySaleRecord::create([
            "voucher_number" => $voucherSelector->voucher_number,
             'cash'=>$voucherSelector->total,
             'tax' => $voucherSelector->tax,
+            'time' => $carbon->format('h:iA'),
            'total' => $voucherSelector->net_total,
         ]);
 

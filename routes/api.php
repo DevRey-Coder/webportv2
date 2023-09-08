@@ -39,6 +39,10 @@ Route::prefix("v1")->group(function () {
         Route::post('session-off',[SessionController::class,'sessionOff']);
         Route::get('daily',[DailySaleRecordController::class,'daily']);
         Route::get('daily-total',[DailySaleRecordController::class,'dailyTotal']);
+        Route::get('monthly',[DailySaleRecordController::class,'monthly']);
+        Route::get('monthly-total',[DailySaleRecordController::class,'monthlyTotal']);
+        Route::get('yearly',[DailySaleRecordController::class,'yearly']);
+        Route::get('yearly-total',[DailySaleRecordController::class,'yearlyTotal']);
 //        Route::post("session-off", SessionController::class);
 
 

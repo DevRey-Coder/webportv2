@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             // PhotoSeeder::class
             VoucherSeeder::class,
             VoucherRecordSeeder::class,
+            DailySaleSeeder::class,
             // VoucherSeeder::class,
             // VoucherRecordSeeder::class,
         ]);

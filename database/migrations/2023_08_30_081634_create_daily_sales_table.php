@@ -16,9 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->dateTime('start')->nullable();
             $table->dateTime('end')->nullable();
-//            $table->dateTime('time')->nullable();
-
-
+            $table->string('time')->nullable();
+            $table->integer('vouchers')->nullable();
+            $table->integer('dailyCash')->nullable();
+            $table->integer('dailyTax')->nullable();
+            $table->integer('dailyTotal')->nullable();
             $table->timestamps();
         });
     }

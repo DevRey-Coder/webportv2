@@ -33,7 +33,7 @@ class DailySaleRecordSeeder extends Seeder
                 "total" => rand(10000,99999),
                 "count" => rand(1,10),
                 'tax'=>rand(100,999),
-                'time'=> substr($day,0,10),
+                'time' => $endDate->format('h:iA'),
                 "created_at" => $day,
                 "updated_at" => $day
             ];
