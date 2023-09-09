@@ -92,52 +92,27 @@ class DailySaleRecordController extends Controller
 
     public function yearly()
     {
-//        $query = request()->input('query');
-//        $carbon = Carbon::now();
-//        $value = $query ?? $carbon->format('Y-m');
-//        $months = DailySale::where('created_at', 'like', "%$value%")->get();
-//        foreach ($months as $month) {
-//            $vouchers = $month->sum('vouchers');
-//            $cash = $month->sum('dailyCash');
-//            $tax = $month->sum('dailytax');
-//            $total = $month->sum('dailyTotal');
-//        return response()->json([
-//        'vouchers' => $vouchers,
-//        'cash' => $cash,
-//        'tax' => $tax,
-//        'total' => $total,
-//        ]);
-        $carbon = Carbon::now()->format('Y');
-        $query = request()->input('queryY');
-        $querys = request()->input('queryYM');
-        $query1 = request()->input('queryM');
+        $collect = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
+        $collectItem = $collect->map(function ($col, $key) {
+            $query = request()->input('query');
+            $lastYear = DailySale::latest("id")->select('created_at')->first()->created_at;
+            $value = $query ?? substr($lastYear, 0, 4);
+            $finalValue = $value . "-" . $col;
 
-        $dailyCreated = DailySale::first()->created_at;
-        $lastMonth = substr($dailyCreated, 0, 7);
-        $lastYear = substr($dailyCreated, 0, 4);
-        $month = substr($dailyCreated, 5, 2);
-        $value = $query ?? $lastYear;
-        $a = DailySale::where('created_at', 'like', "%$value%")->get();
-        $value1 = $querys ?? $month;
-        $start = $querys ?? $lastMonth;
-        $end = $start . "-13";
-
-        $yearly = $a->whereBetween('created_at', [$lastMonth, $end])->all();
-
-
-    foreach($yearly as $year)
-         {
-//            $collect = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
-//            $collectItem = $collect->map(function (int $col) {
-//                return $col;
-//            });
-             $b = $year->where('created_at','like', "%$start%")->get();
-
-        };
-        $d = $b->pull(dailyTax)->get();
-//        return response()->json($c->all());
-//$type = gettype($c);
-        return response()->json($d);
+            $a = DailySale::where('created_at', 'like', "%$finalValue%");
+            $cash = $a->sum('dailyTax');
+            $tax = $a->sum('dailyCash');
+            $total = $a->sum('dailyTotal');
+            $collection = collect([
+                'year' => $value,
+                'month' => $col,
+                'cash' => $cash,
+                'tax' => $tax,
+                'total' => $total,
+            ]);
+            return $collection;
+        });
+        return response()->json($collectItem);
     }
 
     public function yearlyTotal()

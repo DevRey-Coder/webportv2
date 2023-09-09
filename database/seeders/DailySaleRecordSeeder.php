@@ -19,6 +19,7 @@ class DailySaleRecordSeeder extends Seeder
         $startDate = Carbon::now()->subYear();
 
         $period = CarbonPeriod::create($startDate, $endDate);
+        $num = 0;
         $DailyTotalSale = [];
         foreach ($period as $day) {
             $date = $day;
@@ -27,17 +28,20 @@ class DailySaleRecordSeeder extends Seeder
 //            $total = $dailyVoucher->sum('total');
 //            $taxTotal = $dailyVoucher->sum('tax');
 //            $netTotal = $dailyVoucher->sum('net_total');
-            $DailyTotalSale[] = [
-                "voucher_number" => $dailyVoucher,
-                "cash" => rand(1000,9999),
-                "total" => rand(10000,99999),
-                "count" => rand(1,10),
-                'tax'=>rand(100,999),
-                'time' => $endDate->format('h:iA'),
-                "created_at" => $day,
-                "updated_at" => $day
-            ];
-        }
+//while($num < 10) {
+    $DailyTotalSale[] = [
+        "voucher_number" => $dailyVoucher,
+        "cash" => rand(1000,9999),
+        "total" => rand(10000,99999),
+        "count" => rand(1,10),
+        'tax'=>rand(100,999),
+        'time' => $endDate->format('h:iA'),
+        "created_at" => $day,
+        "updated_at" => $day
+    ];
+//    $num +1;
+}
+//        }
         DailySaleRecord::insert($DailyTotalSale);
     }
 }
