@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DailySale;
+use App\Models\DailySaleRecord;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -13,6 +17,13 @@ class CheckoutController extends Controller
 {
     public function checkout(Request $request)
     {
+        $user = User::find(Auth::id());
+
+        if ($user->session == false ){
+            return response()->json([
+                "message" => "Cashier has closed",
+            ]);
+        }
         $productIds = collect($request->items)->pluck("product_id");
         $products = Product::whereIn("id", $productIds)->get(); // use database
         $total = 0;
@@ -36,6 +47,15 @@ class CheckoutController extends Controller
             "net_total" => $netTotal,
             "user_id" => Auth::id(),
         ]); // use database
+        $carbon = Carbon::now();
+        $voucherSelector = Voucher::orderBy('id', 'desc')->first();
+        $saleRecord = DailySaleRecord::create([
+           "voucher_number" => $voucherSelector->voucher_number,
+            'cash'=>$voucherSelector->total,
+            'tax' => $voucherSelector->tax,
+            'time' => $carbon->format('h:iA'),
+           'total' => $voucherSelector->net_total,
+        ]);
 
         $records = [];
 
@@ -58,6 +78,14 @@ class CheckoutController extends Controller
 
         $voucherRecords = VoucherRecord::insert($records); // use database
         // dd($voucherRecords);
+        $date = Carbon::now()->format('Y-m-d H:i:s');
+
+        $voucherRecordSelector = VoucherRecord::Where('created_at', $date)->get();
+                $record = DailySaleRecord::orderBy('id', 'desc')->first();
+                $record->count = $voucherRecordSelector->sum('quantity');
+                $record->save();
+
         return $request;
+
     }
 }

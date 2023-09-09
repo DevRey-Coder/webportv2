@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\V1\UserFilter;
+use App\Http\Resources\UserQueryResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
 use App\Models\Photo;
@@ -30,6 +32,7 @@ class ApiAuthController extends Controller
             "date_of_birth" => "required|date",
             "password" => "required|min:8",
             "address" => "required | max:30",
+
         ]);
 
         $user = User::create([
@@ -43,27 +46,27 @@ class ApiAuthController extends Controller
             "address" => $request->address,
         ]);
 
-        if($request->hasFile('user_photo')){
+        if ($request->hasFile('user_photo')) {
             $file = $request->file('photo');
-            $fileName = time().".".$file->getClientOriginalExtension();
+            $fileName = time() . "." . $file->getClientOriginalExtension();
 
-            $file->storeAs('public/photos/',$fileName);
+            $file->storeAs('public/photos/', $fileName);
             $user = Auth::user();
 
             $media = Media::create([
-                'filename' => $user->name."_profile",
-                'url' => Storage::url('public/photos/', $fileName)
+                'filename' => $user->name . "_profile",
+                'url' => Storage::url('public/photos/', $fileName),
             ]);
 
             $photo = Photo::create([
-                'name' => $user->name."_profile",
+                'name' => $user->name . "_profile",
                 'url' => $media->url,
                 'ext' => $file->getClientOriginalExtension(),
-                'user_id' => $request->user_id
+                'user_id' => $request->user_id,
             ]);
 
             $media->photo()->save($photo);
-            $user->update(['user_photo'=>$photo->url]);
+            $user->update(['user_photo' => $photo->url]);
         }
 
         return response()->json([
@@ -77,15 +80,16 @@ class ApiAuthController extends Controller
             "email" => "required|email",
             "password" => "required|min:8",
         ]);
-        
-        
+
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
             ]);
         }
-        
+
+
+
         if (Auth::user()->ban == true) {
             return response()->json([
                 "message" => "Your account is banned.",
@@ -93,7 +97,7 @@ class ApiAuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('admin-token',['admin']);
+        $token = $user->createToken('admin-token', ['admin']);
 
         return response()->json([
             'name' => $user->name,
@@ -102,26 +106,27 @@ class ApiAuthController extends Controller
         ]);
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request)
+    {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed'
+            'new_password' => 'required|min:8|confirmed',
         ]);
 
         $user = Auth::user();
 
-        if(!Hash::check($request->current_password, $user->password)){
+        if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
-                'message' => 'Current password is incorrect'
-            ],400);
+                'message' => 'Current password is incorrect',
+            ], 400);
         }
 
         $user->update([
-            'password' => Hash::make($request->new_password)
+            'password' => Hash::make($request->new_password),
         ]);
 
         return response()->json([
-            'message' => 'Password changed successfully'
+            'message' => 'Password changed successfully',
         ]);
     }
 
@@ -136,7 +141,8 @@ class ApiAuthController extends Controller
     public function logoutAll()
     {
         foreach (Auth::user()->tokens as $token) {
-            $token->delete();
+               $token->delete();
+
         }
         return response()->json([
             "message" => "logout all devices successful",
@@ -152,24 +158,18 @@ class ApiAuthController extends Controller
         // return UserResource::collection($user);
         // return response()->json($user);
         return new UserResource($user);
-        
-    }
-    public function showAllUser()
-    {
-        $query = request()->input('query');
 
-        $users = User::when($query, function ($queryBuilder, $query) {
-            return $queryBuilder->where('name', 'like', "%$query%");
-            // ->orWhere('brand', 'like', "%$query%");
-        })
-            ->when(request()->has('id'), function ($query) {
-                $sortType = request()->id ?? 'asc';
-                $query->orderBy("id", $sortType);
-            })
-            ->latest("id")
-            ->paginate(10)
-            ->withQueryString();
-        return UserResource::collection($users);
+    }
+    public function showAllUser(Request $request)
+    {
+        $filter = new UserFilter();
+        $queryItems = $filter->transform($request);
+        if (count($queryItems) == 0) {
+            return UserResource::collection(User::paginate(5));
+        } else {
+            $users = User::where($queryItems)->latest("id")->paginate(5)->withQueryString();
+            return  UserQueryResource::collection($users->appends($request->query()));
+        }
     }
 
     public function ban(string $id)

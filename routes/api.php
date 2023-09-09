@@ -6,6 +6,8 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\DailySaleRecordController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
@@ -31,7 +33,20 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("voucher", VoucherController::class);
         Route::apiResource("voucher-record", VoucherRecordController::class);
         Route::post("register", [ApiAuthController::class, 'register']);
+
         Route::apiResource("photo", PhotoController::class);
+        Route::post('session-on',[SessionController::class,'sessionOn']);
+        Route::post('session-off',[SessionController::class,'sessionOff']);
+        Route::get('daily',[DailySaleRecordController::class,'daily']);
+        Route::get('daily-total',[DailySaleRecordController::class,'dailyTotal']);
+        Route::get('monthly',[DailySaleRecordController::class,'monthly']);
+        Route::get('monthly-total',[DailySaleRecordController::class,'monthlyTotal']);
+        Route::get('yearly',[DailySaleRecordController::class,'yearly']);
+        Route::get('yearly-total',[DailySaleRecordController::class,'yearlyTotal']);
+//        Route::post("session-off", SessionController::class);
+
+
+
 //         Route::apiResource("user", UserController::class);
 
         Route::post("check-out", [CheckoutController::class, 'checkout']);
