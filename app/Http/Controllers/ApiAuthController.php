@@ -81,11 +81,14 @@ class ApiAuthController extends Controller
             "password" => "required|min:8",
         ]);
 
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
             ]);
         }
+
+
 
         if (Auth::user()->ban == true) {
             return response()->json([

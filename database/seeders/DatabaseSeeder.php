@@ -24,14 +24,12 @@ class DatabaseSeeder extends Seeder
             StockSeeder::class,
             UserSeeder::class,
             DailySaleRecordSeeder::class,
-//            PhotoSeeder::class,
             //MediaSeeder::class
             // PhotoSeeder::class
             VoucherSeeder::class,
             VoucherRecordSeeder::class,
             DailySaleSeeder::class,
-            // VoucherSeeder::class,
-            // VoucherRecordSeeder::class,
+
         ]);
     }
 }
