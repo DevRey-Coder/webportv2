@@ -112,7 +112,22 @@ class DailySaleRecordController extends Controller
             ]);
             return $collection;
         });
-        return response()->json($collectItem);
+//        $filterCollectItem = $collectItem->map(function ($coll){
+//$coll
+//            return ;
+//        });
+////        $filterCollectItem = $collectItem[0]->whereNotNull('tax');
+//        $filteredProducts = $collectItem->filter(function ($item) {
+//            return $item;
+//        });
+//        [$a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l] = $collectItem;
+//        $filterCollectItem = collect([$a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l]);
+//
+//        $type = gettype($collectItem);
+////        dd($a['year']);
+////        return response()->json($filterCollectItem);
+
+        return $collectItem;
     }
 
     public function yearlyTotal()
@@ -126,7 +141,6 @@ class DailySaleRecordController extends Controller
         $cash = $yearlySale->sum('dailyCash');
         $tax = $yearlySale->sum('dailyTax');
         $total = $yearlySale->sum('dailyTotal');
-
         $totalMonth = $yearlySale->last()->created_at;
 
         return response()->json([
@@ -136,6 +150,12 @@ class DailySaleRecordController extends Controller
             'total tax' => $tax,
             'total' => $total,
         ]);
+    }
+
+    public function dbTest()
+    {
+        $a = DailySale::where('dailyTax', '<', '200')->orWhere('vouchers', '<', '10')->get();
+        return response()->json($a);
     }
 
 

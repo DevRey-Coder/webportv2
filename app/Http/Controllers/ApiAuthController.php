@@ -88,8 +88,6 @@ class ApiAuthController extends Controller
             ]);
         }
 
-
-
         if (Auth::user()->ban == true) {
             return response()->json([
                 "message" => "Your account is banned.",
