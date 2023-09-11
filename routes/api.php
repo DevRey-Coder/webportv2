@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\DailySaleRecordController;
+use App\Http\Controllers\ReportSaleController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
@@ -35,27 +36,30 @@ Route::prefix("v1")->group(function () {
         Route::post("register", [ApiAuthController::class, 'register']);
 
         Route::apiResource("photo", PhotoController::class);
-        Route::post('session-on',[SessionController::class,'sessionOn']);
-        Route::post('session-off',[SessionController::class,'sessionOff']);
-        Route::get('daily',[DailySaleRecordController::class,'daily']);
-        Route::get('daily-total',[DailySaleRecordController::class,'dailyTotal']);
-        Route::get('monthly',[DailySaleRecordController::class,'monthly']);
-        Route::get('monthly-total',[DailySaleRecordController::class,'monthlyTotal']);
-        Route::get('yearly',[DailySaleRecordController::class,'yearly']);
-        Route::get('yearly-total',[DailySaleRecordController::class,'yearlyTotal']);
-//        Route::post("session-off", SessionController::class);
+        Route::post('session-on', [SessionController::class, 'sessionOn']);
+        Route::post('session-off', [SessionController::class, 'sessionOff']);
+        Route::get('daily', [DailySaleRecordController::class, 'daily']);
+        Route::get('daily-total', [DailySaleRecordController::class, 'dailyTotal']);
+        Route::get('monthly', [DailySaleRecordController::class, 'monthly']);
+        Route::get('monthly-total', [DailySaleRecordController::class, 'monthlyTotal']);
+        Route::get('yearly', [DailySaleRecordController::class, 'yearly']);
+        Route::get('yearly-total', [DailySaleRecordController::class, 'yearlyTotal']);
+        //        Route::post("session-off", SessionController::class);
 
 
+        // Report Group
+        Route::get('daily-report', [ReportSaleController::class, 'dailyReport']);
 
-//         Route::apiResource("user", UserController::class);
+
+        //         Route::apiResource("user", UserController::class);
 
         Route::post("check-out", [CheckoutController::class, 'checkout']);
     });
 
     Route::post("login", [ApiAuthController::class, 'login']);
-//     Route::get("media",[MediaController::class,'index']);
-//     Route::get("media/{media}",[MediaController::class,'show']);
+    //     Route::get("media",[MediaController::class,'index']);
+    //     Route::get("media/{media}",[MediaController::class,'show']);
 
-//     Route::delete('photo/{photo}',[PhotoController::class,'destroy']);
-//     Route::put('photo/{photo}',[PhotoController::class,'update']);
+    //     Route::delete('photo/{photo}',[PhotoController::class,'destroy']);
+    //     Route::put('photo/{photo}',[PhotoController::class,'update']);
 });
