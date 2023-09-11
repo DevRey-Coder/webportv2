@@ -12,6 +12,7 @@ use App\Http\Resources\MonthlyTotalResource;
 use App\Models\Brand;
 use App\Models\DailySale;
 use App\Models\DailySaleRecord;
+use http\Env\Response;
 use Illuminate\Support\Carbon;
 
 class DailySaleRecordController extends Controller
@@ -92,42 +93,38 @@ class DailySaleRecordController extends Controller
 
     public function yearly()
     {
-        $collect = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
-        $collectItem = $collect->map(function ($col, $key) {
-            $query = request()->input('query');
-            $lastYear = DailySale::latest("id")->select('created_at')->first()->created_at;
-            $value = $query ?? substr($lastYear, 0, 4);
-            $finalValue = $value . "-" . $col;
+        $query = request()->input('query');
+        if (request()->has('query')) {
+            $check = DailySale::whereYear('created_at', $query)->get();
+            if ($check->isEmpty()) {
+                return response()->json([
+                    'message' => "There is no sale in this year $query"
+                ]);
+            }
+        }
 
-            $a = DailySale::where('created_at', 'like', "%$finalValue%");
-            $cash = $a->sum('dailyTax');
-            $tax = $a->sum('dailyCash');
-            $total = $a->sum('dailyTotal');
-            $collection = collect([
-                'year' => $value,
-                'month' => $col,
-                'cash' => $cash,
-                'tax' => $tax,
-                'total' => $total,
-            ]);
-            return $collection;
-        });
-//        $filterCollectItem = $collectItem->map(function ($coll){
-//$coll
-//            return ;
-//        });
-////        $filterCollectItem = $collectItem[0]->whereNotNull('tax');
-//        $filteredProducts = $collectItem->filter(function ($item) {
-//            return $item;
-//        });
-//        [$a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l] = $collectItem;
-//        $filterCollectItem = collect([$a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l]);
-//
-//        $type = gettype($collectItem);
-////        dd($a['year']);
-////        return response()->json($filterCollectItem);
-
-        return $collectItem;
+        $collectItem = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+            ->map(function ($col, $key) {
+                $query = request()->input('query');
+                $lastYear = DailySale::latest("id")->select('created_at')->first()->created_at;
+                $value = $query ?? substr($lastYear, 0, 4);
+                $finalValue = $value . "-" . $col;
+                $monthly = DailySale::where('created_at', 'like', "%$finalValue%");
+                $cash = $monthly->sum('dailyTax');
+                $tax = $monthly->sum('dailyCash');
+                $total = $monthly->sum('dailyTotal');
+                return collect([
+                    'year' => $value,
+                    'month' => $col,
+                    'cash' => $cash,
+                    'tax' => $tax,
+                    'total' => $total,
+                ]);
+            })
+            ->filter(function ($item) {
+                return $item['tax'] != 0;
+            });
+        return response()->json($collectItem);
     }
 
     public function yearlyTotal()
@@ -154,9 +151,8 @@ class DailySaleRecordController extends Controller
 
     public function dbTest()
     {
-        $a = DailySale::where('dailyTax', '<', '200')->orWhere('vouchers', '<', '10')->get();
-        return response()->json($a);
+$today = Carbon::today()->format('d M Y');
+        $daily = DailySale::where('time', 'LIKE ', "%11 Sep 2022%")->get();
+        return response()->json($daily);
     }
-
-
 }
