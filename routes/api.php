@@ -9,6 +9,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\DailySaleRecordController;
 use App\Http\Controllers\ReportSaleController;
+use App\Http\Controllers\StockReportController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
@@ -44,6 +45,8 @@ Route::prefix("v1")->group(function () {
         Route::get('monthly-total', [DailySaleRecordController::class, 'monthlyTotal']);
         Route::get('yearly', [DailySaleRecordController::class, 'yearly']);
         Route::get('yearly-total', [DailySaleRecordController::class, 'yearlyTotal']);
+        Route::get('sale-report', [StockReportController::class, 'index']);
+
         //        Route::post("session-off", SessionController::class);
 
 
