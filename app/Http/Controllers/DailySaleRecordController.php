@@ -103,14 +103,16 @@ class DailySaleRecordController extends Controller
             $cash = $a->sum('dailyTax');
             $tax = $a->sum('dailyCash');
             $total = $a->sum('dailyTotal');
-            $collection = collect([
+
+            return collect([
                 'year' => $value,
                 'month' => $col,
                 'cash' => $cash,
                 'tax' => $tax,
                 'total' => $total,
             ]);
-            return $collection;
+        })->filter(function (){
+        
         });
         return response()->json($collectItem);
     }

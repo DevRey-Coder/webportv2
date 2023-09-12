@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StockReportResource;
 use App\Http\Resources\StockResource;
+use App\Models\Brand;
+use App\Models\DailySale;
 use App\Models\Product;
 use App\Models\Stock;
 use Illuminate\Http\Request;
@@ -37,7 +39,27 @@ class StockReportController extends Controller
                 'stock level' => $checkStockLvl,
             ]);
         });
-        return response()->json($stocks);
 
+        $percent = $stocks->only("stock level");
+//        ->percentage(fn ($value) => $value === 1);
+        return response()->json($percent);
+
+    }
+
+    public function stockReport()
+    {
+//        ->map(function ($col) {
+//            $totalProducts = $col->product->count('id');
+//            return collect([
+//                'total products' => $totalProducts
+//            ]);
+//        });
+        $totalProducts = Product::count('id');
+        $totalBrands = Brand::count('id');
+        $products = Product::sum('total_stock');
+
+//        $values = Stock::all()->product;
+
+        return $products;
     }
 }
