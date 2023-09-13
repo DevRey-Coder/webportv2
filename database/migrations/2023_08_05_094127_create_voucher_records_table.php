@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('voucher_records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('voucher_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id');
-            $table->integer('quantity');
-            $table->double('cost');
-            $table->double('price');
+            $table->double('total_cost');
+            $table->json('items')->nullable();
             $table->timestamps();
         });
     }
