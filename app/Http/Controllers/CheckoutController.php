@@ -50,7 +50,7 @@ class CheckoutController extends Controller
         $carbon = Carbon::now();
         $voucherSelector = Voucher::orderBy('id', 'desc')->first();
         $saleRecord = DailySaleRecord::create([
-           "voucher_number" => $voucherSelector->voucher_number,
+           "voucher_id" => $voucherSelector->id,
             'cash'=>$voucherSelector->total,
             'tax' => $voucherSelector->tax,
             'time' => $carbon->format('h:iA'),
@@ -84,8 +84,6 @@ class CheckoutController extends Controller
                 $record = DailySaleRecord::orderBy('id', 'desc')->first();
                 $record->count = $voucherRecordSelector->sum('quantity');
                 $record->save();
-
         return $request;
-
     }
 }

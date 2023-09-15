@@ -8,6 +8,8 @@ use App\Models\Brand;
 use App\Models\DailySale;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\VoucherRecord;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StockReportController extends Controller
@@ -18,13 +20,13 @@ class StockReportController extends Controller
             $stockLvl = $col->quantity;
             switch ($stockLvl) {
                 case($stockLvl === "0"):
-                    $checkStockLvl = "No stock";
+                    $checkStockLvl = "Out of Stock";
                     break;
                 case($stockLvl <= 10):
-                    $checkStockLvl = "Low stock";
+                    $checkStockLvl = "Low Stock";
                     break;
                 case($stockLvl >= 11):
-                    $checkStockLvl = "In stock";
+                    $checkStockLvl = "In Stock";
                     break;
                 default:
                     $checkStockLvl = 'Something went wrong.';
@@ -40,26 +42,27 @@ class StockReportController extends Controller
             ]);
         });
 
-        $percent = $stocks->only("stock level");
-//        ->percentage(fn ($value) => $value === 1);
-        return response()->json($percent);
-
+        $percentOutOfStock = $stocks->percentage(fn($value) => $value["stock level"] === "Out of Stock") . "%";
+        $percentLowStock = $stocks->percentage(fn($value) => $value["stock level"] === "Low Stock") . "%";
+        $percentInStock = $stocks->percentage(fn($value) => $value["stock level"] === "In Stock") . "%";
+        return response()->json($percentOutOfStock);
     }
 
     public function stockReport()
     {
-//        ->map(function ($col) {
-//            $totalProducts = $col->product->count('id');
-//            return collect([
-//                'total products' => $totalProducts
-//            ]);
-//        });
         $totalProducts = Product::count('id');
         $totalBrands = Brand::count('id');
         $products = Product::sum('total_stock');
 
-//        $values = Stock::all()->product;
+        $startDate = Carbon::now()->subDays(7)->startOfDay();
 
-        return $products;
+        $recordsForPastWeek = VoucherRecord::where('created_at', '>=', $startDate)->get()->map(function ($col) {
+            $brand = $col->product->brand->name;
+            return collect([
+                'brand' => $brand
+            ]);
+        });
+
+        return $recordsForPastWeek;
     }
 }

@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class DailySaleRecord extends Model
 {
     protected $fillable = ['voucher_number','cash','tax','total','count','time'];
+
+    public static function create(array $array)
+    {
+    }
+
     use HasFactory;
 }

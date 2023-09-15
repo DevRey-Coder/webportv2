@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('daily_sale_records', function (Blueprint $table) {
             $table->id();
-            $table->string('voucher_number')->nullable();
+            $table->foreignId('voucher_id')->nullable();
             $table->string('time')->nullable();
             $table->integer('cash')->nullable();
             $table->integer('tax')->nullable();

@@ -23,7 +23,7 @@ class DailySaleRecordSeeder extends Seeder
         $DailyTotalSale = [];
         foreach ($period as $day) {
             $date = $day;
-            $dailyVoucher = rand(1000, 9999);
+            $dailyVoucher = rand(1, 100);
             //            $totalVoucher = $dailyVoucher->count('id');
             //            $total = $dailyVoucher->sum('total');
             //            $taxTotal = $dailyVoucher->sum('tax');
@@ -32,7 +32,7 @@ class DailySaleRecordSeeder extends Seeder
             $num_of_daily_sales = rand(3, 6);
             for ($i = 0; $i < $num_of_daily_sales; $i++) {
                 $DailyTotalSale[] = [
-                    "voucher_number" => $dailyVoucher,
+                    "voucher_id" => $dailyVoucher,
                     "cash" => rand(1000, 9999),
                     "total" => rand(10000, 99999),
                     "count" => rand(1, 10),
