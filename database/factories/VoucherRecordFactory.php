@@ -17,8 +17,8 @@ class VoucherRecordFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = Carbon::create(2023, 9, 5);
-        $endDate = Carbon::create(2023, 9, 11);  
+        $endDate = Carbon::today()->startOfDay(); // End date is today
+        $startDate = Carbon::today()->subDays(13); // Start date is 13 days ago (to include today)
 
         // Generate a random date within the specified range
         $randomDate = fake()->dateTimeBetween($startDate, $endDate);
