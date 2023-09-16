@@ -17,50 +17,62 @@ class CheckoutController extends Controller
 {
     public function checkout(Request $request)
     {
-        $user = User::find(Auth::id());
 
-        if ($user->session == false ){
+// Checking session close or not
+        $user = User::find(Auth::id());
+        if ($user->session == false) {
             return response()->json([
                 "message" => "Cashier has closed",
             ]);
         }
-        $productIds = collect($request->items)->pluck("product_id");
-        $products = Product::whereIn("id", $productIds)->get(); // use database
-        $total = 0;
 
+// Select product_id from input request
+        $productIds = collect($request->items)->pluck("product_id");
+
+//query products with input product_id
+        $products = Product::whereIn("id", $productIds)->get();
+
+//Calculate total with input request
+        $total = 0;
         foreach ($request->items as $item) {
             $total += $item["quantity"] * $products->find($item["product_id"])->sale_price;
         }
 
+// Calculate tax and total with tax
         $tax = $total * 0.05;
         $netTotal = $total + $tax;
 
+//Generate Voucher number
         $voucherNumber = random_int(1000, 9999);
 
-        // Generate a random string of letters and numbers
+// Generate a random string of letters and numbers
         $randomString = Str::random(3);
 
+//Creating Voucher and insert to database
         $voucher = Voucher::create([
-            "voucher_number" =>  $voucherNumber.$randomString,
+            "voucher_number" => $voucherNumber . $randomString,
             "total" => $total,
             "tax" => $tax,
             "net_total" => $netTotal,
             "user_id" => Auth::id(),
-        ]); // use database
-        $carbon = Carbon::now();
-        $voucherSelector = Voucher::orderBy('id', 'desc')->first();
-        $saleRecord = DailySaleRecord::create([
-           "voucher_id" => $voucherSelector->id,
-            'cash'=>$voucherSelector->total,
-            'tax' => $voucherSelector->tax,
-            'time' => $carbon->format('h:iA'),
-           'total' => $voucherSelector->net_total,
         ]);
 
+
+//        $carbon = Carbon::now();
+//        $voucherSelector = Voucher::orderBy('id', 'desc')->first();
+//        $saleRecord = DailySaleRecord::create([
+//            "voucher_id" => $voucherSelector->id,
+//            'cash' => $voucherSelector->total,
+//            'tax' => $voucherSelector->tax,
+//            'time' => $carbon->format('h:iA'),
+//            'total' => $voucherSelector->net_total,
+//        ]);
+//
+
+
+
         $records = [];
-
         foreach ($request->items as $item) {
-
             $currentProduct = $products->find($item["product_id"]);
             $records[] = [
                 "voucher_id" => $voucher->id,
@@ -76,14 +88,14 @@ class CheckoutController extends Controller
             ]);
         }
 
-        $voucherRecords = VoucherRecord::insert($records); // use database
-        // dd($voucherRecords);
-        $date = Carbon::now()->format('Y-m-d H:i:s');
+//Adding products from cashier to Voucher_record table
+        $voucherRecords = VoucherRecord::insert($records);
 
-        $voucherRecordSelector = VoucherRecord::Where('created_at', $date)->get();
-                $record = DailySaleRecord::orderBy('id', 'desc')->first();
-                $record->count = $voucherRecordSelector->sum('quantity');
-                $record->save();
+//        $date = Carbon::now()->format('Y-m-d H:i:s');
+//        $voucherRecordSelector = VoucherRecord::Where('created_at', $date)->get();
+//        $record = DailySaleRecord::orderBy('id', 'desc')->first();
+//        $record->count = $voucherRecordSelector->sum('quantity');
+//        $record->save();
         return $request;
     }
 }
