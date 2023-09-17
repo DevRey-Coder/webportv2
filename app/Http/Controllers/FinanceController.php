@@ -12,32 +12,37 @@ use App\Http\Resources\MonthlyTotalResource;
 use App\Models\Brand;
 use App\Models\DailySale;
 use App\Models\DailySaleRecord;
+use App\Models\Voucher;
+use App\Models\VoucherRecord;
 use Illuminate\Support\Carbon;
 
-class DailySaleRecordController extends Controller
+class FinanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function daily()
     {
-        $carbon = Carbon::now();
+//Daily
         $query = request()->input('query');
-        $dailySale = DailySaleRecord::when($query, function ($queryBuilder, $query) {
+        $dailySale = Voucher::when($query, function ($queryBuilder, $query) {
             return $queryBuilder->where('created_at', 'like', "%$query%");
         })
             ->when(request()->has('id'), function ($query) {
                 $sortType = request()->id ?? 'asc';
                 $query->orderBy("id", $sortType);
             })
-            ->latest("id")->paginate(5)->withQueryString();
-        return DailySaleResource::collection($dailySale);
-    }
+            ->latest("id")->paginate(5)->withQueryString()->map(function ($col) {
+                $quantity = VoucherRecord::where('voucher_id', $col->id);
+                return collect([
+                    'voucher' => $col->voucher_number,
+                    'time' => $quantity->first()->time,
+                    'item count' => $quantity->sum('quantity'),
+                    'cash' => $col->total,
+                    'tax' => $col->tax,
+                    'total' => $col->net_total,
+                ]);
+            });
 
-    public function dailyTotal()
-    {
-        $query = request()->input('query');
-
+//DailyTotal
         $dailyTotal = DailySale::when($query, function ($queryBuilder, $query) {
             return $queryBuilder->where('created_at', 'like', "%$query%");
         })
@@ -45,53 +50,73 @@ class DailySaleRecordController extends Controller
                 $sortType = request()->id ?? 'asc';
                 $query->orderBy("id", $sortType);
             })
-            ->latest("id")->paginate(5)->withQueryString();
+            ->latest("id")->paginate(1)->withQueryString()->filter(function ($item) {
+                return $item['end'] != null;
+            })->map(callback: function ($col) {
 
-        return DailyTotalResource::collection($dailyTotal);
+                return collect([
+                    'Total Vouchers' => $col->vouchers,
+                    'Total Cash' => $col->dailyCash,
+                    'Total Tax' => $col->dailyTax,
+                    'Total' => $col->dailyTotal,
+                ]);
+            });
+        $collection = collect([
+            'dailyTotal' => $dailyTotal[0],
+            'dailySale' => $dailySale
+        ]);
+        return response()->json($collection);
     }
 
     public function monthly()
     {
+//Monthly
         $query = request()->input('query');
-        $dailySale = DailySale::when($query, function ($queryBuilder, $query) {
+        $monthlySale = DailySale::when($query, function ($queryBuilder, $query) {
             return $queryBuilder->where('created_at', 'like', "%$query%");
         })
             ->when(request()->has('id'), function ($query) {
                 $sortType = request()->id ?? 'asc';
                 $query->orderBy("id", $sortType);
             })
-            ->latest("id")->paginate(5)->withQueryString();
-        return MonthlySaleResource::collection($dailySale);
+            ->latest("id")->paginate(5)->withQueryString()->map(callback: function ($col) {
 
-//$forStore = DailySale::where('cr)
+                return collect([
+                    'date' => $col->time,
+                    'vouchers' => $col->vouchers,
+                    'Cash' => $col->dailyCash,
+                    'Tax' => $col->dailyTax,
+                    'Total' => $col->dailyTotal,
+                ]);
+            });;
 
-    }
-
-    public function monthlyTotal()
-    {
-        $query = request()->input('query');
+//Monthly Total
         $carbon = Carbon::now();
         $value = $query ?? $carbon->format('Y-m');
-        $monthlySale = DailySale::whereDate('created_at', 'like', "%$value%")->get();
-
-
-        $vouchers = $monthlySale->sum('vouchers');
-        $cash = $monthlySale->sum('dailyCash');
-        $tax = $monthlySale->sum('dailyTax');
-        $total = $monthlySale->sum('dailyTotal');
-        $totalDays = $monthlySale->last()->time;
-
-        return response()->json([
+        $monthly = DailySale::whereDate('created_at', 'like', "%$value%")->get();
+        $vouchers = $monthly->sum('vouchers');
+        $cash = $monthly->sum('dailyCash');
+        $tax = $monthly->sum('dailyTax');
+        $total = $monthly->sum('dailyTotal');
+        $totalDays = $monthly->last()->time;
+        $monthCollection = ([
             'total days' => substr($totalDays, 0, 2),
             'total vouchers' => $vouchers,
             'total cash' => $cash,
             'total tax' => $tax,
             'total' => $total,
         ]);
+
+        $collection = collect([
+            'monthlyTotal' => $monthCollection,
+            'monthlySale' => $monthlySale
+        ]);
+        return response()->json($collection);
     }
 
     public function yearly()
     {
+//Yearly
         $query = request()->input('query');
         if (request()->has('query')) {
             $check = DailySale::whereYear('created_at', $query)->get();
@@ -101,7 +126,6 @@ class DailySaleRecordController extends Controller
                 ]);
             }
         }
-
         $collectItem = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
             ->map(function ($col, $key) {
                 $query = request()->input('query');
@@ -123,12 +147,8 @@ class DailySaleRecordController extends Controller
             ->filter(function ($item) {
                 return $item['tax'] != 0;
             });
-        return response()->json($collectItem);
-    }
 
-    public function yearlyTotal()
-    {
-        $query = request()->input('query');
+//Yearly Total
         $carbon = Carbon::now();
         $value = $query ?? $carbon->format('Y');
         $yearlySale = DailySale::whereDate('created_at', 'like', "%$value%")->get();
@@ -139,15 +159,18 @@ class DailySaleRecordController extends Controller
         $total = $yearlySale->sum('dailyTotal');
 
         $totalMonth = $yearlySale->last()->created_at;
-
-        return response()->json([
+        $yearCollection = ([
             'total months' => substr($totalMonth, 5, 2),
             'total vouchers' => $vouchers,
             'total cash' => $cash,
             'total tax' => $tax,
             'total' => $total,
         ]);
+
+        $collection = collect([
+            'yearlyTotal' => $yearCollection,
+            'yearlySale' => $collectItem
+        ]);
+        return response()->json($collection);
     }
-
-
 }

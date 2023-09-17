@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DailySaleRecord;
+use App\Models\Product;
 use App\Models\VoucherRecord;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,13 +26,17 @@ class VoucherRecordSeeder extends Seeder
             $date = $day;
             $dailyVoucher = rand(1, 100);
             $num_of_daily_sales = rand(3, 6);
+            $productId = rand(1, 20);
+            $quantity = rand(5, 50);
+            $price = Product::find($productId)->sale_price;
+
             for ($i = 0; $i < $num_of_daily_sales; $i++) {
                 $DailyTotalSale[] = [
                     "voucher_id" => $dailyVoucher,
-                    "product_id" => rand(1,20),
-                    "quantity" => rand(5, 50),
-                    "price" => rand(1000, 99999),
-                    "cost" => rand(1000, 99999),
+                    "product_id" => $productId,
+                    "quantity" => $quantity,
+                    "price" => $price,
+                    "cost" => $quantity * $price,
                     "created_at" => $day,
                     "updated_at" => $day
                 ];

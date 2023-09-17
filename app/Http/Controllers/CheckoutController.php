@@ -70,14 +70,17 @@ class CheckoutController extends Controller
 //
 
 
-
+        $carbon = Carbon::now();
         $records = [];
         foreach ($request->items as $item) {
             $currentProduct = $products->find($item["product_id"]);
+            $price = $products->find($item["product_id"])->sale_price;
             $records[] = [
                 "voucher_id" => $voucher->id,
                 "product_id" => $item["product_id"],
-                "price" => $products->find($item["product_id"])->sale_price,
+                "price" => $price,
+                'time' => $carbon->format('h:iA'),
+                "tax" =>$price * 0.05 ,
                 "quantity" => $item["quantity"],
                 "cost" => $item["quantity"] * $currentProduct->sale_price,
                 "created_at" => now(),
