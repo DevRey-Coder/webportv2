@@ -34,8 +34,11 @@ class CheckoutController extends Controller
 
 //Calculate total with input request
         $total = 0;
+        $totalActualPrice = 0;
         foreach ($request->items as $item) {
-            $total += $item["quantity"] * $products->find($item["product_id"])->sale_price;
+//        $selectedItem = $item["quantity"] * $products->find($item["product_id"]);
+            $total +=  $item["quantity"] * $products->find($item["product_id"])->sale_price;
+            $totalActualPrice +=  $item["quantity"] * $products->find($item["product_id"])->actual_price;
         }
 
 // Calculate tax and total with tax
@@ -52,6 +55,7 @@ class CheckoutController extends Controller
         $voucher = Voucher::create([
             "voucher_number" => $voucherNumber . $randomString,
             "total" => $total,
+            "total_actual_price" => $totalActualPrice,
             "tax" => $tax,
             "net_total" => $netTotal,
             "user_id" => Auth::id(),
@@ -74,13 +78,14 @@ class CheckoutController extends Controller
         $records = [];
         foreach ($request->items as $item) {
             $currentProduct = $products->find($item["product_id"]);
-            $price = $products->find($item["product_id"])->sale_price;
+            $price = $currentProduct->sale_price;
+            $actualPrice = $currentProduct->actual_price;
             $records[] = [
                 "voucher_id" => $voucher->id,
                 "product_id" => $item["product_id"],
                 "price" => $price,
+                "actual_price" => $actualPrice,
                 'time' => $carbon->format('h:iA'),
-                "tax" =>$price * 0.05 ,
                 "quantity" => $item["quantity"],
                 "cost" => $item["quantity"] * $currentProduct->sale_price,
                 "created_at" => now(),

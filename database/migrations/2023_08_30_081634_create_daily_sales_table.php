@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('dailyCash')->nullable();
             $table->integer('dailyTax')->nullable();
             $table->integer('dailyTotal')->nullable();
+            $table->integer('dailyActualTotal')->nullable();
             $table->timestamps();
         });
     }

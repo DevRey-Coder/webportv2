@@ -43,14 +43,12 @@ class VoucherSeeder extends Seeder
                     $totalActualPrice += $quantity * $currentProduct->actual_price;
                     $total += $quantity * $currentProduct->sale_price;
                     $price = $currentProduct->sale_price;
-                    $tax1 = $price * 0.05;
 
                     $records[] = [
                         "voucher_id" => $id,
                         "product_id" => $itemId,
-//                        "actual_price" => $currentProduct->actual_price,
+                        "actual_price" => $currentProduct->actual_price,
                         "price" => $price,
-                        "tax" => $tax1,
                         "quantity" => $quantity,
                         "cost" => $quantity * $currentProduct->sale_price,
                         'time' => $endDate->format('h:iA'),
@@ -69,7 +67,7 @@ class VoucherSeeder extends Seeder
                 $netTotal = $total + $tax;
                 $vouchers[] = [
                     "voucher_number" => $voucherNumber . $randomString,
-//                    "total_actual_price" => $totalActualPrice,
+                    "total_actual_price" => $totalActualPrice,
                     "total" => $total,
                     "tax" => $tax,
                     "net_total" => $netTotal,

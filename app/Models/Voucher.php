@@ -21,5 +21,5 @@ class Voucher extends Model
         return $this->belongsToMany(Product::class, VoucherRecord::class);
     }
 
-    protected $fillable = ["customer", "phone", "voucher_number", "total", "tax", "net_total", "user_id"];
+    protected $fillable = ["customer", "phone", "voucher_number", "total", "tax", "net_total", "user_id",'total_actual_price'];
 }

@@ -56,6 +56,7 @@ class SessionController extends Controller
         $session->dailyCash = $total->sum('cost');
         $session->dailyTax = $total->sum('tax');
         $session->dailyTotal = $total->sum('price');
+        $session->dailyActualTotal = $total->sum('actual_total');
         $session->update();
 
 

@@ -11,7 +11,6 @@ use App\Http\Resources\MonthlySaleResource;
 use App\Http\Resources\MonthlyTotalResource;
 use App\Models\Brand;
 use App\Models\DailySale;
-use App\Models\DailySaleRecord;
 use App\Models\Voucher;
 use App\Models\VoucherRecord;
 use Illuminate\Support\Carbon;
@@ -31,11 +30,10 @@ class FinanceController extends Controller
                 $query->orderBy("id", $sortType);
             })
             ->latest("id")->paginate(5)->withQueryString()->map(function ($col) {
-                $quantity = VoucherRecord::where('voucher_id', $col->id);
                 return collect([
                     'voucher' => $col->voucher_number,
-                    'time' => $quantity->first()->time,
-                    'item count' => $quantity->sum('quantity'),
+                    'time' => $col->voucherRecords->pluck('time')[0],
+                    'item count' => $col->voucherRecords->pluck('quantity')->sum(),
                     'cash' => $col->total,
                     'tax' => $col->tax,
                     'total' => $col->net_total,
@@ -127,7 +125,7 @@ class FinanceController extends Controller
             }
         }
         $collectItem = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
-            ->map(function ($col, $key) {
+            ->map(function ($col) {
                 $query = request()->input('query');
                 $lastYear = DailySale::latest("id")->select('created_at')->first()->created_at;
                 $value = $query ?? substr($lastYear, 0, 4);
