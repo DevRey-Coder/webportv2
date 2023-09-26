@@ -35,7 +35,7 @@ class OverviewController extends Controller
 
 
             return collect([
-                'Yearly Sales' => $col . ' : ' . $totalIncome,
+                'Yearly Sales' => collect([$col => $totalIncome]),
                 'Total Income' => $totalIncome,
                 'Total Expense' => $totalExpense,
             ]);
@@ -46,7 +46,6 @@ class OverviewController extends Controller
         $weeklyItem = \Illuminate\Support\Collection::make();
 
         // Get today's date
-        $today = Carbon::now()->format('Y-m-d');
 
         // Check if a query parameter is present
 
@@ -72,14 +71,25 @@ class OverviewController extends Controller
                 $totalIncome = $monthly->sum('dailyTotal');
                 $totalExpense = $monthly->sum('dailyActualTotal');
                 return collect([
-                    'Monthly Sales' => $col . ' : ' . $totalIncome,
+//                    'Monthly Sales' => $col . ' : ' . $totalIncome,
+                    'Monthly Sales' => collect([$col => $totalIncome]),
                     'Total Income' => $totalIncome,
                     'Total Expense' => $totalExpense,
                 ]);
             });
 
 //Today Overview
-        $todayOverview = Voucher::latest('id')->paginate('5')->map(function ($col) {
+        $carbon = Carbon::now()->format('Y-m-d');
+
+        $getTodayOverview = Voucher::whereDate('created_at', $carbon);
+        $todayTotalOverview = collect([
+            'Total Vouchers' => $getTodayOverview->count('voucher_number'),
+            'Total Cash' => $getTodayOverview->sum('total'),
+            'Total Tax' => $getTodayOverview->sum('tax'),
+            'Total' => $getTodayOverview->sum('net_total'),
+        ]);
+
+        $todayOverview = $getTodayOverview->paginate(5)->map(function ($col) {
 
             return collect([
                 'Sale Person' => $col->user->name,
@@ -119,6 +129,7 @@ class OverviewController extends Controller
             'Total Income' => $totalIncome,
             'Total Expense' => $totalExpense,
             'Today Sales Overview' => $todayOverview,
+            'Today Total Overview' => $todayTotalOverview,
 
         ]);
 

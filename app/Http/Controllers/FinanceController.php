@@ -171,4 +171,37 @@ class FinanceController extends Controller
         ]);
         return response()->json($collection);
     }
+
+    public function custom()
+    {
+        $start = request()->input('start');
+        $end = request()->input('end');
+
+
+        $getCustomSale = Voucher::whereBetween('created_at', [$start, $end]);
+        $customTotal = collect([
+            'Total Vouchers' => $getCustomSale->count('voucher_number'),
+            'Total Cash' => $getCustomSale->sum('total'),
+            'Total Tax' => $getCustomSale->sum('tax'),
+            'Total' => $getCustomSale->sum('net_total'),
+        ]);
+
+
+        $customSale = $getCustomSale->latest("id")->paginate(5)->withQueryString()->map(function ($col) {
+            return collect([
+                'voucher' => $col->voucher_number,
+                'time' => $col->voucherRecords->pluck('time')[0],
+                'item count' => $col->voucherRecords->pluck('quantity')->sum(),
+                'cash' => $col->total,
+                'tax' => $col->tax,
+                'total' => $col->net_total,
+            ]);
+        });
+        $collection = collect([
+            'customTotal' => $customTotal,
+            'customSale' => $customSale
+        ]);
+        return response()->json($collection);
+
+    }
 }
