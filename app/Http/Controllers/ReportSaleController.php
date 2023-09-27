@@ -46,6 +46,8 @@ class ReportSaleController extends Controller
 
             // Calculate the total for the current day
             $dailyTotal = $recordsForDay->sum('total_cost');
+            $dailyCash = $recordsForDay->sum('dailyCash');
+            $dailyTax = $recordsForDay->sum('dailyTax');
 
             // Store the daily total along with the date
             $dailyTotals[] = [
@@ -55,8 +57,8 @@ class ReportSaleController extends Controller
                 'end' => $startDate->format('Y-m-d H:i:s'),
                 'time' => $startDate->format('d M Y'),
                 'vouchers' => $recordsForDay->count(), // Count of vouchers for the day
-                'dailyCash' => $recordsForDay->sum('cash'), // Sum of cash for the day
-                'dailyTax' => $recordsForDay->sum('tax'), // Sum of tax for the day
+                'dailyCash' => $dailyCash, // Sum of cash for the day
+                'dailyTax' => $dailyTax, // Sum of tax for the day
                 'dailyTotal' => $dailyTotal, // Total cost for the day
                 'created_at' => $startDate->toIso8601String(),
                 'updated_at' => $startDate->toIso8601String(),
@@ -93,9 +95,9 @@ class ReportSaleController extends Controller
         // Initialize an array for the top selling products
         $topSellingProductsData = [];
 
-        // Process the top selling products data
         $itemsCount = [];
 
+        // Process the top selling products data
         foreach ($weeklyData as $record) {
             $items = json_decode($record->items, true);
 
@@ -108,17 +110,12 @@ class ReportSaleController extends Controller
                 }
 
                 $itemsCount[$itemName] += $itemQuantity;
-            }
-        }
 
-        // Sort the items by quantity count in descending order
-        arsort($itemsCount);
+                // Retrieve the product associated with the item, or create a new one if it does not exist
+                $product = Product::firstOrCreate([
+                    'name' => $itemName,
+                ]);
 
-        foreach ($itemsCount as $itemName => $quantity) {
-            // Retrieve the product associated with the item
-            $product = Product::where('name', $itemName)->first();
-
-            if ($product) {
                 // Retrieve the brand associated with the product
                 $brand = $product->brand;
                 $brandName = $brand ? $brand->name : 'Local Brand';
@@ -126,7 +123,7 @@ class ReportSaleController extends Controller
                 $topSellingProductsData[] = [
                     'Product Name' => $itemName,
                     'Brand Name' => $brandName,
-                    'Quantity Sold' => $quantity,
+                    'Quantity Sold' => $itemQuantity,
                     'Date' => $record->created_at->format('Y-m-d'),
                 ];
             }
@@ -135,7 +132,7 @@ class ReportSaleController extends Controller
         // Return the desired data
         return [
             'dailyTotal' => $totalDailyTotal,
-            'dailyTotals' => $dailyTotals,
+            'singleDailyTotal' => $dailyTotals,
             'dailyData' => $sortedDailyData,
             'weeklyTotalCost' => $totalCostPastWeek,
             'topSellingProductsData' => $topSellingProductsData,
@@ -144,6 +141,93 @@ class ReportSaleController extends Controller
 
     function monthlyReport()
     {
+        /** Current Month Sales */
+        $currentMonth = Carbon::now()->format('Y-m'); // Get the current year and month in 'Y-m' format
+        $currentMonthQuery = DailySale::where('created_at', 'like', "%$currentMonth%")->get();
+
+        // Calculate the total for the current month
+        $currentMonthTotal = $currentMonthQuery->sum('dailyTotal');
+
+
+        /** Outputting Monthly Sales */
+        $monthlyNum = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
+        $monthlySales = $monthlyNum->map(function ($num) {
+            $date = Carbon::now()->format('Y');
+            $finalValue = $date . "-" . $num;
+            $monthly = DailySale::where('created_at', 'like', "%$finalValue%");
+
+            $vouchers = $monthly->sum('vouchers');
+            $cash = $monthly->sum('dailyCash');
+            $tax = $monthly->sum('dailyTax');
+            $total = $monthly->sum('dailyTotal');
+
+            return collect([
+                'monthDate' => $finalValue,
+                'totalVouchers' => $vouchers,
+                'totalCash' => $cash,
+                'totalTax' => $tax,
+                'totalAmount' => $total
+            ]);
+        });
+
+
+        /** Sorting top Selling items */
+        // Query Current Month data for VoucherRecord
+        $date = Carbon::now()->format('Y-m');
+        $monthlyData = VoucherRecord::where('created_at', 'like', "%$date%")->get();
+
+        // Initialize an array for the top selling products
+        $topSellingProductsData = [];
+
+        // Process the top selling products data
+        $itemsCount = [];
+
+        foreach ($monthlyData as $record) {
+            $items = json_decode($record->items, true);
+
+            foreach ($items as $item) {
+                $itemName = $item['name'];
+                $itemQuantity = $item['quantity'];
+
+                if (!isset($itemsCount[$itemName])) {
+                    $itemsCount[$itemName] = 0;
+                }
+
+                $itemsCount[$itemName] += $itemQuantity;
+
+                // Attempt to retrieve the product associated with the item
+                $product = Product::where('name', $itemName)->first();
+
+                if ($product) {
+                    // Retrieve the brand associated with the product
+                    $brand = $product->brand;
+                    $brandName = $brand ? $brand->name : 'Local Brand';
+
+                    $topSellingProductsData[] = [
+                        'Product Name' => $itemName,
+                        'Brand Name' => $brandName,
+                        'Quantity Sold' => $itemQuantity,
+                        'Date' => $record->created_at->format('Y-m-d'),
+                    ];
+                } else {
+                    // Handle the case when the product is not found
+                    $topSellingProductsData[] = [
+                        'Product Name' => $itemName,
+                        'Brand Name' => 'Local Brand',
+                        'Quantity Sold' => $itemQuantity,
+                        'Date' => $record->created_at->format('Y-m-d'),
+                        'Error' => 'Product not found',
+                    ];
+                }
+            }
+        }
+
+        return [
+            "currentMonthTotal" => $currentMonthTotal,
+            "monthlySales" => $monthlySales,
+            "topSellingProducts" => $topSellingProductsData
+        ];
+
         // Get the current month.
         $carbon = Carbon::now();
         $value = $carbon->format('Y-m');
@@ -163,30 +247,77 @@ class ReportSaleController extends Controller
 
     public function yearlyReport()
     {
-        // Get the current year.
-        $carbon = Carbon::now();
-        $year = $carbon->format('Y');
+        /** Current Year Sales */
+        $currentYear = Carbon::now()->format('Y'); // Get the current year
 
-        // Query for all daily sales records for the current year.
-        $yearlySales = DailySale::whereYear('created_at', $year)->get();
+        /** Outputting Yearly Sales */
+        $yearlyNum = collect(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]);
+        $yearlySales = $yearlyNum->map(function ($num) {
+            $date = Carbon::now()->format('Y');
+            $finalValue = $date . "-" . $num;
+            $yearly = DailySale::where('created_at', 'like', "%$finalValue%");
 
-        // Calculate the total sales for the year.
-        $yearlyTotalSales = $yearlySales->sum('dailyTotal');
+            $vouchers = $yearly->sum('vouchers');
+            $cash = $yearly->sum('dailyCash');
+            $tax = $yearly->sum('dailyTax');
+            $total = $yearly->sum('dailyTotal');
 
-        // Group the daily sales records by month name.
-        $monthlySales = $yearlySales->groupBy('created_at_month_name');
+            return collect([
+                'monthDate' => $finalValue,
+                'totalVouchers' => $vouchers,
+                'totalCash' => $cash,
+                'totalTax' => $tax,
+                'totalAmount' => $total
+            ]);
+        });
 
-        // Calculate the total sales for each month.
-        $monthlySalesTotals = $monthlySales->map(function ($monthlySales) {
-            return $monthlySales->sum('dailyTotal');
-        })->filter(function ($totalSales) {
-            return $totalSales > 0;
-        })->toArray();
 
-        // Return the monthly sales totals and the yearly total sales.
+        /** Sorting top Selling items */
+        // Query Current Year data for VoucherRecord
+        $date = Carbon::now()->format('Y');
+        $yearlyData = VoucherRecord::where('created_at', 'like', "%$date%")->get();
+
+        // Initialize an array for the top selling products
+        $yearlyTopSellingProductsData = [];
+
+        // Process the top selling products data
+        $itemsCount = [];
+
+        foreach ($yearlyData as $record) {
+            $items = json_decode($record->items, true);
+
+            foreach ($items as $item) {
+                $itemName = $item['name'];
+                $itemQuantity = $item['quantity'];
+
+                if (!isset($itemsCount[$itemName])) {
+                    $itemsCount[$itemName] = 0;
+                }
+
+                $itemsCount[$itemName] += $itemQuantity;
+
+                // Attempt to retrieve the product associated with the item
+                $product = Product::where('name', $itemName)->first();
+
+                if ($product) {
+                    // Retrieve the brand associated with the product
+                    $brand = $product->brand;
+                    $brandName = $brand ? $brand->name : 'Local Brand';
+
+                    $yearlyTopSellingProductsData[] = [
+                        'Product Name' => $itemName,
+                        'Brand Name' => $brandName,
+                        'Quantity Sold' => $itemQuantity,
+                        'Date' => $record->created_at->format('Y-m-d'),
+                    ];
+                }
+            }
+        }
+
         return [
-            'yearlyTotalSales' => $yearlyTotalSales,
-            'monthlySalesTotals' => $monthlySalesTotals,
+            "currentYearTotal" => $yearlySales->sum('totalAmount'),
+            "yearlySales" => $yearlySales,
+            "yearlyTopSellingProducts" => $yearlyTopSellingProductsData
         ];
     }
 }
