@@ -7,8 +7,9 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SessionController;
-use App\Http\Controllers\DailySaleRecordController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\ReportSaleController;
+use App\Http\Controllers\OverviewController;
 use App\Http\Controllers\StockReportController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
@@ -39,13 +40,13 @@ Route::prefix("v1")->group(function () {
         Route::apiResource("photo", PhotoController::class);
         Route::post('session-on', [SessionController::class, 'sessionOn']);
         Route::post('session-off', [SessionController::class, 'sessionOff']);
-        Route::get('daily', [DailySaleRecordController::class, 'daily']);
-        Route::get('daily-total', [DailySaleRecordController::class, 'dailyTotal']);
-        Route::get('monthly', [DailySaleRecordController::class, 'monthly']);
-        Route::get('monthly-total', [DailySaleRecordController::class, 'monthlyTotal']);
-        Route::get('yearly', [DailySaleRecordController::class, 'yearly']);
-        Route::get('yearly-total', [DailySaleRecordController::class, 'yearlyTotal']);
-        Route::get('sale-report', [StockReportController::class, 'index']);
+        Route::get('daily', [FinanceController::class, 'daily']);
+        Route::get('monthly', [FinanceController::class, 'monthly']);
+        Route::get('yearly', [FinanceController::class, 'yearly']);
+        Route::get('custom', [FinanceController::class, 'custom']);
+        Route::get('stock-overview', [StockReportController::class, 'index']);
+        Route::get('stock-report', [StockReportController::class, 'stockReport']);
+        Route::get('overview', [OverviewController::class, 'overview']);
 
         //        Route::post("session-off", SessionController::class);
 

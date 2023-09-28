@@ -25,7 +25,7 @@ class BrandController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-     
+
     public function create()
     {
         //
@@ -87,7 +87,7 @@ class BrandController extends Controller
             'photo' => $request->photo
         ]);
 
-        return new BrandDetailResource($brand);
+      return new BrandDetailResource($brand);
     }
 
     /**

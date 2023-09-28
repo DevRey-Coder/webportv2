@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Voucher;
+use App\Models\VoucherRecord;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,16 +16,18 @@ class DailySaleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//        return parent::toArray($request);}
-return [
-    'voucher' => $this->voucher_number,
-    'time' => $this->time,
-    'item count' => $this->count,
-    'cash' => $this->cash,
-    'tax' => $this->tax,
-    'total' => $this->total,
 
-];
+$quantity = VoucherRecord::where('voucher_id',$this->id);
+
+        return [
+            'voucher' => $this->voucher_number,
+            'time' => $quantity->first()->time,
+            'item count' => $quantity->sum('quantity'),
+            'cash' => $this->total,
+            'tax' => $this->tax,
+            'total' => $this->net_total,
+
+        ];
 
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DailySale extends Model
 {
-    protected $fillable = ['user_id', 'start', 'end', 'vouchers', 'dailyCash', 'dailyTax', 'dailyTotal','time'];
+    protected $fillable = ['user_id', 'start', 'end', 'vouchers', 'dailyCash', 'dailyTax', 'dailyTotal','time','dailyActualTotal'];
 
     use HasFactory;
 }

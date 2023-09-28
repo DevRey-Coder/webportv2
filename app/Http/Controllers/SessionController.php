@@ -8,6 +8,7 @@ use App\Http\Resources\SessionResource;
 use App\Models\DailySale;
 use App\Models\DailySaleRecord;
 use App\Models\User;
+use App\Models\VoucherRecord;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use function PHPUnit\Framework\isEmpty;
@@ -43,7 +44,7 @@ class SessionController extends Controller
         $user = User::find(Auth::id());
         $user->session = false;
         $user->save();
-        $total = DailySaleRecord::whereDate('created_at', $date->format('Y-m-d'))->get();
+        $total = VoucherRecord::whereDate('created_at', $date->format('Y-m-d'))->get();
         $session = DailySale::orderBy('id', 'desc')->first();
         if (is_null($session->end)) {
             $session->end = $date->format('Y-m-d H:i:s');
@@ -52,9 +53,10 @@ class SessionController extends Controller
         $session->time = $date->format('d M Y');
         $session->end = $date->format('Y-m-d H:i:s');
         $session->vouchers = $total->count('voucher_number');
-        $session->dailyCash = $total->sum('cash');
+        $session->dailyCash = $total->sum('cost');
         $session->dailyTax = $total->sum('tax');
-        $session->dailyTotal = $total->sum('total');
+        $session->dailyTotal = $total->sum('price');
+        $session->dailyActualTotal = $total->sum('actual_total');
         $session->update();
 
 
