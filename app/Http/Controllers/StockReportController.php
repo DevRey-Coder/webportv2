@@ -54,6 +54,7 @@ class StockReportController extends Controller
         $totalBrands = Brand::count('id');
         $products = Product::sum('total_stock');
 
+//Best Seller Brand
         $startDate = Carbon::now()->subDays(7)->startOfDay();
 
         $recordsForPastWeek = VoucherRecord::where('created_at', '>=', $startDate)->get()->map(function ($col) {
@@ -62,7 +63,6 @@ class StockReportController extends Controller
                 'brand' => $brand
             ]);
         });
-
         return $recordsForPastWeek;
     }
 }

@@ -44,8 +44,8 @@ Route::prefix("v1")->group(function () {
         Route::get('monthly', [FinanceController::class, 'monthly']);
         Route::get('yearly', [FinanceController::class, 'yearly']);
         Route::get('custom', [FinanceController::class, 'custom']);
-        Route::get('sale-overview', [StockReportController::class, 'index']);
-        Route::get('sale-report', [StockReportController::class, 'stockReport']);
+        Route::get('stock-overview', [StockReportController::class, 'index']);
+        Route::get('stock-report', [StockReportController::class, 'stockReport']);
         Route::get('overview', [OverviewController::class, 'overview']);
 
         //        Route::post("session-off", SessionController::class);
