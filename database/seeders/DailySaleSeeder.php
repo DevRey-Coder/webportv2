@@ -27,6 +27,7 @@ class DailySaleSeeder extends Seeder
         foreach ($period as $day) {
             $date = $day;
 
+
             $dailyVoucher = Voucher::WhereDate('created_at', $date)->get();
             $totalVoucher = $dailyVoucher->count('id');
             $totalActualPrice = $dailyVoucher->sum('total_actual_price');
@@ -47,6 +48,26 @@ class DailySaleSeeder extends Seeder
                 "start" => $day,
                 "end" => $day
             ];
+
+//            $dailyVoucher = rand(1000, 9999);
+//            $num_of_sales = rand(3, 6);
+//            $tax = rand(10, 800);
+//            $cash = rand(1000,99999);
+//            for ($i = 0; $i < $num_of_sales; $i++) {
+//                $DailyTotalSale[] = [
+//                    "user_id" => rand(1, 100),
+//                    "time" => $day->format('d M Y'),
+//                    "vouchers" => rand(1, 50),
+//                    'dailyTax' => $tax,
+//                    'dailyCash' => $cash,
+//                    'dailyTotal' => $tax + $cash,
+//                    "created_at" => $day,
+//                    "updated_at" => $day,
+//                    "start" => $day,
+//                    "end" => $day
+//                ];
+//            }
+
         }
         DailySale::insert($DailyTotalSale);
     }

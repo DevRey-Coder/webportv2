@@ -43,6 +43,13 @@ return [
      */
 
     'debug' => (bool) env('APP_DEBUG', false),
+    'providers' => [
+        Barryvdh\Debugbar\ServiceProvider::class,
+    ],
+
+    'middleware' => [
+        Barryvdh\Debugbar\Middleware\Debugbar::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -14,12 +14,13 @@ class DailyTotalResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//        return parent::toArray($request);
+        //        return parent::toArray($request);
         return [
             'Total Vouchers' => $this->vouchers,
             'Total Cash' => $this->dailyCash,
             'Total Tax' => $this->dailyTax,
             'Total' => $this->dailyTotal,
+            'Created_at' => $this->created_at
         ];
     }
 }

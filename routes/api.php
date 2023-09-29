@@ -52,7 +52,9 @@ Route::prefix("v1")->group(function () {
 
 
         // Report Group
-        Route::get('daily-report', [ReportSaleController::class, 'dailyReport']);
+        Route::get('daily-report', [ReportSaleController::class, 'weeklyReport']);
+        Route::get('monthly-report', [ReportSaleController::class, 'monthlyReport']);
+        Route::get('yearly-report', [ReportSaleController::class, 'yearlyReport']);
 
 
         //         Route::apiResource("user", UserController::class);
